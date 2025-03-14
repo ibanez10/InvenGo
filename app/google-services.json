@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "461738208788",
+    "project_id": "invengo-7b3d7",
+    "storage_bucket": "invengo-7b3d7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461738208788:android:f2125e2889d3fed3aa8101",
+        "android_client_info": {
+          "package_name": "InvenGo.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461738208788-9mdt3r05vlrv62i6kji6m2nn73d9gf5i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZG_UrO3zQDcP9BtGaYpk55YtI-rqJAXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461738208788-9mdt3r05vlrv62i6kji6m2nn73d9gf5i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461738208788:android:c7ec3cfbae46fc15aa8101",
+        "android_client_info": {
+          "package_name": "com.example.invengo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461738208788-9mdt3r05vlrv62i6kji6m2nn73d9gf5i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZG_UrO3zQDcP9BtGaYpk55YtI-rqJAXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461738208788-9mdt3r05vlrv62i6kji6m2nn73d9gf5i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
