@@ -10,7 +10,11 @@ import com.example.invengo.ui.theme.component.Getstarted_Page
 import com.example.invengo.ui.theme.component.Onboarding_Page1
 import com.example.invengo.ui.theme.component.Onboarding_Page2
 import com.example.invengo.ui.theme.component.First_Login_Page
+import com.example.invengo.ui.theme.component.Five_Login_Page
+import com.example.invengo.ui.theme.component.Four_Login_Page
 import com.example.invengo.ui.theme.component.Second_Login_Page
+import com.example.invengo.ui.theme.component.Six_Login_Page
+import com.example.invengo.ui.theme.component.Threed_Login_Page
 
 
 sealed class Screen(val route: String) {
@@ -20,6 +24,10 @@ sealed class Screen(val route: String) {
     object Page3 : Screen("getstarted_page")
     object Page4 : Screen("firts_login_page")
     object Page5 : Screen("second_login_page")
+    object Page6 : Screen("threed_login_page")
+    object Page7 : Screen("four_login_page")
+    object Page8 : Screen("five_login_page")
+    object Page9 : Screen("six_login_page")
 }
 
 @Composable
@@ -56,7 +64,27 @@ fun OnboardingNavController() {
             })
         }
         composable(Screen.Page5.route) {
-            Second_Login_Page(modifier = Modifier, navController, onNextClick = {})
+            Second_Login_Page(modifier = Modifier, navController, onNextClick = {
+                navController.navigate(Screen.Page6.route)
+            })
+        }
+        composable(Screen.Page6.route) {
+            Threed_Login_Page(modifier = Modifier, navController, onNextClick = {
+                navController.navigate(Screen.Page7.route)
+            })
+        }
+        composable(Screen.Page7.route) {
+            Four_Login_Page(modifier = Modifier, navController, onNextClick = {
+                navController.navigate(Screen.Page8.route)
+            })
+        }
+        composable(Screen.Page8.route) {
+            Five_Login_Page(modifier = Modifier, navController, onNextClick = {
+                navController.navigate(Screen.Page9.route)
+            })
+        }
+        composable(Screen.Page9.route) {
+            Six_Login_Page(modifier = Modifier, navController, onNextClick = {})
         }
     }
 }

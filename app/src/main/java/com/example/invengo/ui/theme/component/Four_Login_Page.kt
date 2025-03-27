@@ -40,8 +40,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -49,6 +50,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
@@ -60,7 +63,7 @@ import com.example.invengo.ui.theme.Teal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Second_Login_Page(modifier: Modifier, navController: NavController, onNextClick: () -> Unit){
+fun Four_Login_Page(modifier: Modifier, navController: NavController, onNextClick: () -> Unit){
     Box(Modifier
         .fillMaxWidth()
         .fillMaxHeight()
@@ -88,53 +91,69 @@ fun Second_Login_Page(modifier: Modifier, navController: NavController, onNextCl
                         .size(45.dp)
                 )
                 Spacer(Modifier.padding(vertical = 15.dp))
-                Text(fontSize = 40.sp, text = "Enter Code!", color = Color.White, fontWeight = FontWeight(700))
-                Text(fontSize = 40.sp, text = "Send to your email", color = Color.White, fontWeight = FontWeight(700))
+                Text(fontSize = 40.sp, text = "Check!", color = Color.White, fontWeight = FontWeight(700))
+                Text(fontSize = 40.sp, text = "your email", color = Color.White, fontWeight = FontWeight(700))
                 Text(fontSize = 15.sp, text = "We've sent a verification code to your email. Please enter the code below to continue.", color = Color.Gray, fontWeight = FontWeight(500))
                 // Verification
                 Spacer(Modifier.padding(vertical = 10.dp))
                 var codes = remember { List(4) { mutableStateOf("") } }
-                var isFocused by remember { mutableStateOf(false) }
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(15.dp),
                     modifier = Modifier.padding(10.dp)
                 ) {
                     codes.forEachIndexed { index, codeState ->
-                        TextField(
-                            value = codeState.value,
-                            onValueChange = {
-                                if (it.length <= 1 && it.all { char -> char.isDigit() }) {
-                                    codeState.value = it
-                                }
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        var isHovered by remember { mutableStateOf(true) }
+                        Box(
                             modifier = Modifier
                                 .size(65.dp)
                                 .border(
-                                    BorderStroke(
-                                        1.dp,
-                                        if (isFocused) Color.Green else Color.Gray
-                                    ),
-                                    shape = RoundedCornerShape(10.dp)
+                                    1.5.dp,
+                                    if (isHovered) Color.Gray else Color.Green,
+                                    RoundedCornerShape(15.dp)
                                 )
-                                .onFocusChanged { isFocused = it.isFocused },
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = Color.Transparent,
-                                unfocusedContainerColor = Color.Transparent,
-                                disabledContainerColor = Color.Transparent,
-                                errorContainerColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent, // Menghilangkan garis bawah default
-                                unfocusedIndicatorColor = Color.Transparent
-                            ),
-                            textStyle = LocalTextStyle.current.copy(
-                                fontSize = 30.sp,
-                                color = Color.White,
-                                textAlign = TextAlign.Center
-                            ),
-                            singleLine = true
-                        )
-                    }
-                    }
+                                .background(
+                                    if (isHovered) Color.Gray.copy(alpha = 0.2f) else Color.Transparent,
+                                    RoundedCornerShape(15.dp)
+                                )
+                                .pointerInput(Unit) {
+                                    awaitPointerEventScope {
+                                        while (true) {
+                                            val event = awaitPointerEvent()
+                                            isHovered = event.type == PointerEventType.Enter
+                                        }
+                                    }
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            val passwordVisible1 by remember { mutableStateOf(false) }
+                            TextField(
+                                value = codeState.value,
+                                onValueChange = {
+                                    if (it.length <= 1 && it.all { char -> char.isDigit() }) {
+                                        codeState.value = it
+                                    }
+                                },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = Color.Transparent,
+                                    unfocusedContainerColor = Color.Transparent,
+                                    disabledContainerColor = Color.Transparent,
+                                    errorContainerColor = Color.Transparent,
+                                    focusedIndicatorColor = Color.Transparent, // Menghilangkan garis bawah default
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                visualTransformation = if (passwordVisible1) VisualTransformation.None else PasswordVisualTransformation(),
+                                textStyle = LocalTextStyle.current.copy(
+                                    fontSize = 30.sp,
+                                    color = Color.White,
+                                    textAlign = TextAlign.Center
+                                ),
+                                singleLine = true
+                            )
+                        }
+                }
+            }
                 // End verification
                 Spacer(modifier = Modifier.height(60.dp))
                 Column(
@@ -154,7 +173,7 @@ fun Second_Login_Page(modifier: Modifier, navController: NavController, onNextCl
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Teal
-                )){
+                    )){
                     Spacer(Modifier.padding(vertical = 20.dp))
                     Text(text = "Login", fontSize = 20.sp)
                 }
@@ -179,34 +198,6 @@ fun Second_Login_Page(modifier: Modifier, navController: NavController, onNextCl
                         Spacer(Modifier.width(10.dp))
                         Text(text = "Continue with Google", fontSize = 16.sp)
                     }
-                }
-                Spacer(Modifier.height(10.dp))
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    val context = LocalContext.current
-                    val annotatedString = buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = Color.LightGray)) {
-                            append("Don't have an account? ")
-                        }
-                        pushStringAnnotation(tag = "signup", annotation = "https://your-signup-url.com")
-                        withStyle(style = SpanStyle(color = Color.Cyan, textDecoration = TextDecoration.Underline)) {
-                            append("Sign up")
-                        }
-                        pop()
-                    }
-
-                    ClickableText(
-                        text = annotatedString,
-                        onClick = { offset ->
-                            annotatedString.getStringAnnotations(tag = "signup", start = offset, end = offset)
-                                .firstOrNull()?.let {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.item))
-                                    context.startActivity(intent)
-                                }
-                        }
-                    )
                 }
             }
         }

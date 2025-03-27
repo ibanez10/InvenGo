@@ -43,7 +43,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -61,78 +60,60 @@ import com.example.invengo.ui.theme.Teal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun First_Login_Page(modifier: Modifier, navController: NavController, onNextClick: () -> Unit){
+fun Five_Login_Page(modifier: Modifier, navController: NavController, onNextClick: () -> Unit){
     Box(Modifier
         .fillMaxWidth()
         .fillMaxHeight()
     ){
-    Image(painter = painterResource(
-        id = R.drawable.frame),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-    )
+        Image(painter = painterResource(
+            id = R.drawable.frame),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        )
         Box(Modifier.fillMaxWidth().padding(vertical = 15.dp, horizontal = 5.dp)){
             Button(onNextClick, colors = ButtonDefaults.textButtonColors(contentColor = Color.Transparent), contentPadding = PaddingValues(0.dp)) {
-            Image(painter = painterResource(
-                id = R.drawable.arrow2),
-                contentDescription = null,
-                modifier = Modifier.size(25.dp))
+                Image(painter = painterResource(
+                    id = R.drawable.arrow2),
+                    contentDescription = null,
+                    modifier = Modifier.size(25.dp))
             }
             Column(Modifier.fillMaxWidth().padding(vertical = 70.dp, horizontal = 25.dp)) {
-                Image(painter = painterResource(
-                    id = R.drawable.log),
+                Image(
+                    painter = painterResource(
+                        id = R.drawable.log
+                    ),
                     contentDescription = null,
                     modifier = Modifier
                         .size(45.dp)
                 )
                 Spacer(Modifier.padding(vertical = 15.dp))
-                Text(fontSize = 50.sp, text = "Hi there!", color = Color.White, fontWeight = FontWeight(700))
-                Text(fontSize = 50.sp, text = "Welcome back", color = Color.White, fontWeight = FontWeight(700))
-                Text(fontSize = 16.sp, text = "Enter your credentials to access inventory and operations.", color = Color.Gray, fontWeight = FontWeight(500))
-                Spacer(Modifier.padding(vertical = 20.dp))
-                var email by remember { mutableStateOf("") }
-                var isFocused1 by remember { mutableStateOf(false) }
-                TextField(
-                    value = email,
-                    onValueChange = {email = it},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(
-                            BorderStroke(
-                                1.dp,
-                                if (isFocused1) Color.Green else Color.Gray
-                            ),
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                        .onFocusChanged { isFocused1 = it.isFocused },
-                    label = { Text(text = "Email", color = Color.White) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Email,
-                            contentDescription = null,
-                            tint = Color.LightGray,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    },
-                    textStyle = LocalTextStyle.current.copy(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight(700),
-                        color = Color.White,
-                    ),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    )
+                Text(
+                    fontSize = 50.sp,
+                    text = "Reset",
+                    color = Color.White,
+                    fontWeight = FontWeight(700)
                 )
-                Spacer(Modifier.padding(vertical = 10.dp))
+                Text(
+                    fontSize = 50.sp,
+                    text = "your password",
+                    color = Color.White,
+                    fontWeight = FontWeight(700)
+                )
+                Text(
+                    fontSize = 16.sp,
+                    text = "Update password for enhanced account security",
+                    color = Color.Gray,
+                    fontWeight = FontWeight(500)
+                )
+                Spacer(Modifier.padding(vertical = 20.dp))
+                Text(fontSize = 20.sp, text = "Current password*", fontWeight = FontWeight(700), color = Color.LightGray)
+                Spacer(Modifier.padding(vertical = 5.dp))
                 var password by remember { mutableStateOf("") }
                 var passwordVisible by remember { mutableStateOf(false) }
-                var isFocused by remember { mutableStateOf(false) }
+                var isFocused0 by remember { mutableStateOf(false) }
                 TextField(
                     value = password,
                     onValueChange = { password = it },
@@ -140,20 +121,12 @@ fun First_Login_Page(modifier: Modifier, navController: NavController, onNextCli
                         .fillMaxWidth()
                         .border(
                             BorderStroke(
-                                1.dp,
-                                if (isFocused) Color.Green else Color.Gray
+                                1.5.dp,
+                                if (isFocused0) Color.Green else Color.DarkGray
                             ),
-                            shape = RoundedCornerShape(10.dp)
+                            shape = RoundedCornerShape(20.dp)
                         )
-                        .onFocusChanged { isFocused = it.isFocused },
-                    label = { Text(text = "Password", color = Color.White) },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_key_24),
-                            contentDescription = null,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    },
+                        .onFocusChanged { isFocused0 = it.isFocused },
                     trailingIcon = {
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(
@@ -179,11 +152,94 @@ fun First_Login_Page(modifier: Modifier, navController: NavController, onNextCli
                         disabledIndicatorColor = Color.Transparent
                     )
                 )
-                Spacer(Modifier.padding(vertical = 3.dp))
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(text = "Forget password?", fontSize = 15.sp, textAlign = TextAlign.End, color = Color.LightGray)
-                }
+                Spacer(Modifier.padding(vertical = 10.dp))
+                Text(fontSize = 20.sp, text = "New password*", fontWeight = FontWeight(700), color = Color.LightGray)
+                Spacer(Modifier.padding(vertical = 5.dp))
+                var password1 by remember { mutableStateOf("") }
+                var passwordVisible1 by remember { mutableStateOf(false) }
+                var isFocused1 by remember { mutableStateOf(false) }
+                TextField(
+                    value = password1,
+                    onValueChange = { password1 = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(
+                            BorderStroke(
+                                1.5.dp,
+                                if (isFocused1) Color.Green else Color.DarkGray
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                        .onFocusChanged { isFocused1 = it.isFocused },
+                    trailingIcon = {
+                        IconButton(onClick = { passwordVisible1 = !passwordVisible1 }) {
+                            Icon(
+                                painter = painterResource(
+                                    id = if (passwordVisible1) R.drawable.baseline_visibility_24
+                                    else R.drawable.baseline_visibility_off_24
+                                ),
+                                contentDescription = "Toggle Password Visibility",
+                                modifier = Modifier.size(30.dp)
+                            )
+                        }
+                    },
+                    textStyle = LocalTextStyle.current.copy(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                    ),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    )
+                )
+                Spacer(Modifier.padding(vertical = 10.dp))
+                Text(fontSize = 20.sp, text = "Confirm new password*", fontWeight = FontWeight(700), color = Color.LightGray)
+                Spacer(Modifier.padding(vertical = 5.dp))
+                var password2 by remember { mutableStateOf("") }
+                var passwordVisible2 by remember { mutableStateOf(false) }
+                var isFocused by remember { mutableStateOf(false) }
+                TextField(
+                    value = password2,
+                    onValueChange = { password2 = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(
+                            BorderStroke(
+                                1.5.dp,
+                                if (isFocused) Color.Green else Color.DarkGray
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                        .onFocusChanged { isFocused = it.isFocused },
+                    trailingIcon = {
+                        IconButton(onClick = { passwordVisible2 = !passwordVisible2 }) {
+                            Icon(
+                                painter = painterResource(
+                                    id = if (passwordVisible2) R.drawable.baseline_visibility_24
+                                    else R.drawable.baseline_visibility_off_24
+                                ),
+                                contentDescription = "Toggle Password Visibility",
+                                modifier = Modifier.size(30.dp)
+                            )
+                        }
+                    },
+                    textStyle = LocalTextStyle.current.copy(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                    ),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    )
+                )
                 Spacer(Modifier.padding(vertical = 20.dp))
                 Button(
                     onClick = onNextClick,
@@ -192,57 +248,7 @@ fun First_Login_Page(modifier: Modifier, navController: NavController, onNextCli
                     colors = ButtonDefaults.buttonColors(containerColor = Teal)
                 ) {
                     Spacer(Modifier.padding(vertical = 20.dp))
-                    Text(text = "Login", fontSize = 20.sp)
-                }
-                Spacer(Modifier.padding(vertical = 15.dp))
-                Button(
-                    onClick = onNextClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(BorderStroke(1.dp, Color.Gray), shape = RoundedCornerShape(20.dp)),
-                    shape = RoundedCornerShape(20.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Transparent)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(10.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.google),
-                            contentDescription = null,
-                            modifier = Modifier.size(30.dp)
-                        )
-                        Spacer(Modifier.width(15.dp))
-                        Text(text = "Continue with Google", fontSize = 16.sp)
-                    }
-                }
-                Spacer(Modifier.height(15.dp))
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    val context = LocalContext.current
-                    val annotatedString = buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = Color.LightGray)) {
-                            append("Don't have an account? ")
-                        }
-                        pushStringAnnotation(tag = "signup", annotation = "https://your-signup-url.com")
-                        withStyle(style = SpanStyle(color = Color.Cyan, textDecoration = TextDecoration.Underline)) {
-                            append("Sign up")
-                        }
-                        pop()
-                    }
-
-                    ClickableText(
-                        text = annotatedString,
-                        onClick = { offset ->
-                            annotatedString.getStringAnnotations(tag = "signup", start = offset, end = offset)
-                                .firstOrNull()?.let {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.item))
-                                    context.startActivity(intent)
-                                }
-                        }
-                    )
+                    Text(text = "Save", fontSize = 20.sp)
                 }
             }
         }
