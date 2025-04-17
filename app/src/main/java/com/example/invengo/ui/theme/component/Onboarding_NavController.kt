@@ -28,6 +28,7 @@ sealed class Screen(val route: String) {
     object Page7 : Screen("four_login_page")
     object Page8 : Screen("five_login_page")
     object Page9 : Screen("six_login_page")
+    object Page10 : Screen("home_page_first")
 }
 
 @Composable
@@ -84,7 +85,12 @@ fun OnboardingNavController() {
             })
         }
         composable(Screen.Page9.route) {
-            Six_Login_Page(modifier = Modifier, navController, onNextClick = {})
+            Six_Login_Page(modifier = Modifier, navController, onNextClick = {
+                navController.navigate(Screen.Page10.route)
+            })
+        }
+        composable(Screen.Page10.route) {
+            HomePage_First(modifier = Modifier, navController, onNextClick = {})
         }
     }
 }
