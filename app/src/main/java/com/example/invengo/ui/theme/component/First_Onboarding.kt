@@ -57,12 +57,12 @@ fun First_Onboarding(modifier: Modifier, navController: NavController, onNextCli
             }
         }
         Box(Modifier.fillMaxWidth().padding(25.dp), contentAlignment = Alignment.Center) {
+        }
             Image(
                 painter = painterResource(id = R.drawable.imginv1),
                 contentDescription = null,
                 modifier = Modifier.size(450.dp)
             )
-        }
         Box(
             Modifier.fillMaxWidth()
                 .clip(RoundedCornerShape(topStart = 55.dp, topEnd = 55.dp))

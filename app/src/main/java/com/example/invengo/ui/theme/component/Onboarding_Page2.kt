@@ -2,12 +2,17 @@ package com.example.invengo.ui.theme.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -32,43 +37,63 @@ import com.example.invengo.R
 
 @Composable
 fun Onboarding_Page2(modifier: Modifier, navController: NavController, onNextClick: () -> Unit) {
-    Box(Modifier.fillMaxSize().background(color = Color.Black)){
-        Image(
-            painter = painterResource(id = R.drawable.imginvbg3),
+    Box(Modifier.fillMaxHeight().background(color = Color.Black)){
+        Image(painter = painterResource(
+            id = R.drawable.frame),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxWidth().padding(vertical = 90.dp).size(360.dp))
-        Row(Modifier.fillMaxWidth().padding(5.dp)) {
-            Button(onClick = {}, colors = ButtonDefaults.textButtonColors(contentColor = Color.Transparent), contentPadding = PaddingValues(1.dp) ) {
-            Image(
-                painter = painterResource(id = R.drawable.component),
-                contentDescription = null,
-                modifier = Modifier.size(30.dp)
-            )
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(5.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly, // atau Arrangement.Center sesuai kebutuhan
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.line),
+                    contentDescription = null,
+                    modifier = Modifier.size(190.dp) // gunakan ukuran yang sesuai, bukan fillMaxWidth
+                )
             }
-            Button(onClick = { navController.navigate(Screen.Page3.route) }, colors = ButtonDefaults.textButtonColors(contentColor = Color.Transparent)) {
-            Text( modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Right ,text = "Skip", color = Color.White, fontWeight = FontWeight(600), fontSize = 20.sp )
+            Box(
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.linegray),
+                    contentDescription = null,
+                    modifier =Modifier.size(195.dp),
+                )
             }
         }
-        Box(Modifier.fillMaxWidth().padding(20.dp), contentAlignment = Alignment.Center){
-            Image(
-                painter = painterResource(id = R.drawable.imginv3),
-                contentDescription = null,
-                modifier = Modifier.size(500.dp)
-            )
+        Box(Modifier.fillMaxWidth().height(600.dp).padding(25.dp), contentAlignment = Alignment.Center){
+        Image(
+            painter = painterResource(R.drawable.iconnew),
+            contentDescription = null,
+            modifier = Modifier.size(250.dp)
+        )
         }
-        Box(Modifier.run { fillMaxWidth().clip(RoundedCornerShape(topStart = 55.dp, topEnd = 55.dp)).height(300.dp).background(color = Color.White).align(Alignment.BottomCenter) }){
-            Row(Modifier.fillMaxWidth().padding(vertical = 100.dp)) {
-                Text(modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, text = "Save time and reduce costs with streamlined inventory solutions", fontWeight = FontWeight(500), fontSize = 18.sp)
-            }
-            Box(modifier = Modifier.fillMaxWidth().height(150.dp).align(Alignment.BottomCenter)){
-                Button(onClick = onNextClick, colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black
-                ), modifier = Modifier.width(250.dp).align(alignment = Alignment.Center).padding(horizontal = 30.dp)) {
-                    Text(modifier = Modifier.padding(8.dp), text = "Next", fontSize = 17.sp)
+        Column(Modifier.run { fillMaxWidth().height(400.dp).align(Alignment.BottomStart).padding(25.dp) }){
+            Text(text = "welcome", fontSize = 25.sp, color = Color.Gray)
+            Text(text = "Lorem ipsum dolor amey sin", fontSize = 55.sp, color = Color.LightGray, lineHeight = 60.sp, fontWeight = FontWeight(600))
+            Spacer(Modifier.height(15.dp))
+            Text(text = "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco", fontSize = 20.sp, color = Color.LightGray)
+            Spacer(Modifier.height(20.dp))
+            Button(onNextClick, colors = ButtonDefaults.buttonColors(containerColor = Color.White), shape = RoundedCornerShape(20.dp)) {
+                Row(Modifier.offset(x = -15.dp)){
+                    Image(painterResource(
+                        id = R.drawable.arrow),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(50.dp)
+                    )
+                    Text(text = "Continue", Modifier.padding(vertical = 10.dp, horizontal = 15.dp), fontSize = 22.sp, color = Color.Black)
                 }
             }
-            Text(modifier = Modifier.fillMaxWidth().padding(vertical = 50.dp), textAlign = TextAlign.Center, text = "Save Time, Cut Costs", fontWeight = FontWeight(700), fontSize = 22.sp)
         }
     }
 }
