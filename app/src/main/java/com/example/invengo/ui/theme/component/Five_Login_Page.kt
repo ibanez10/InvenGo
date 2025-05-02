@@ -74,7 +74,7 @@ fun Five_Login_Page(modifier: Modifier, navController: NavController, onNextClic
                 .fillMaxHeight()
         )
         Box(Modifier.fillMaxWidth().padding(vertical = 15.dp, horizontal = 5.dp)){
-            Button(onNextClick, colors = ButtonDefaults.textButtonColors(contentColor = Color.Transparent), contentPadding = PaddingValues(0.dp)) {
+            Button(onClick = {navController.popBackStack()}, colors = ButtonDefaults.textButtonColors(contentColor = Color.Transparent), contentPadding = PaddingValues(0.dp)) {
                 Image(painter = painterResource(
                     id = R.drawable.arrow2),
                     contentDescription = null,
