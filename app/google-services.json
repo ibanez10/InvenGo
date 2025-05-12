@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "73300987529",
-    "project_id": "invengo-17f91",
-    "storage_bucket": "invengo-17f91.firebasestorage.app"
+    "project_number": "1004455573154",
+    "project_id": "inventgo-88805",
+    "storage_bucket": "inventgo-88805.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:73300987529:android:21952c809efcae1a3f0058",
+        "mobilesdk_app_id": "1:1004455573154:android:0712c9eb9216dd4ddf49fb",
         "android_client_info": {
           "package_name": "com.example.invengo"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1004455573154-d5f4kl2b6uhjgjuit2rmvu5hdf14mt40.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.invengo",
+            "certificate_hash": "cc257ffd7d5d2f3eafab98fc46cad5185e02dbec"
+          }
+        },
+        {
+          "client_id": "1004455573154-lq9bp2o3hdoqqnrbq9l3qkkuvdnepj7u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCE296F_7geEW9E2GiX4Hfa5BQVm6e6tKg"
+          "current_key": "AIzaSyCRRtejAtfE31ImeFx4CvQfSGslkrOtBXA"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1004455573154-lq9bp2o3hdoqqnrbq9l3qkkuvdnepj7u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
