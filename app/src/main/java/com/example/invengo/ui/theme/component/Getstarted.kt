@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.invengo.R
 
 @Composable
-fun Getstarted_Page(modifier: Modifier, onNextClick: () -> Unit) {
+fun Getstarted(modifier: Modifier, onNextClick: () -> Unit) {
     Box(
         Modifier
             .fillMaxSize()
@@ -83,7 +83,7 @@ fun Getstarted_Page(modifier: Modifier, onNextClick: () -> Unit) {
                 )
                 Text(modifier = Modifier, fontSize = 17.sp, textAlign = TextAlign.Center, fontWeight = FontWeight(700), text = "Get started with InvenGo and experience the future of inventory management today!")
                 }
-                Box(modifier = Modifier.fillMaxWidth().height(250.dp)){
+                Box(modifier = Modifier.fillMaxWidth().height(200.dp)){
                 Button(onNextClick, Modifier.align(alignment = Alignment.BottomCenter), colors = ButtonDefaults.buttonColors(containerColor = Color.Black), shape = RoundedCornerShape(20.dp)) {
                     Row(Modifier.offset(x = -14.dp)){
                         Image(painterResource(

@@ -30,7 +30,7 @@ import androidx.navigation.NavController
 import com.example.invengo.R
 
 @Composable
-fun Onboarding_Page2(modifier: Modifier, navController: NavController, onNextClick: () -> Unit) {
+fun Onboarding_First(modifier: Modifier, navController: NavController, onNextClick: () -> Unit) {
     Box(Modifier
         .fillMaxHeight()
         .background(color = Color.Black)){

@@ -24,7 +24,7 @@ class AuthViewModel : ViewModel() {
     // Mendapatkan GoogleSignInClient
     fun getGoogleClient(context: Context): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("73300987529-9bjrhq5jhm3da7rhuj9ppr61ic2o6tp1.apps.googleusercontent.com") // Ganti dengan web client ID dari Firebase console
+            .requestIdToken("73300987529-9bjrhq5jhm3da7rhuj9ppr61ic2o6tp1.apps.googleusercontent.com")
             .requestEmail()
             .build()
         return GoogleSignIn.getClient(context, gso)
