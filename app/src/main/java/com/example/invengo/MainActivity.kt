@@ -1,4 +1,8 @@
 package com.example.invengo
+<<<<<<< HEAD
+=======
+
+>>>>>>> e9acdca7fa4ef7ea48c356fb2876f92614074e49
 import OnboardingNavController
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.invengo.auth.SignInViewModel
 import com.example.invengo.ui.theme.InvenGoTheme
+import com.example.invengo.ui.theme.component.First_Login_Page
 import com.example.invengo.ui.theme.component.Splash
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
