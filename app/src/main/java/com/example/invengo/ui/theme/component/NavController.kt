@@ -1,4 +1,5 @@
 import android.app.Activity.RESULT_OK
+import android.provider.ContactsContract.Profile
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -35,6 +36,7 @@ sealed class Screen(val route: String) {
     object AddItem : Screen("AddItem")
     object InboundStock : Screen("InboundStock")
     object StockRelease : Screen("StockRelease")
+    object Profile : Screen("Profile")
 }
 
 @Composable
@@ -140,7 +142,9 @@ fun OnboardingNavController() {
                 },
                 onStockReleaseClick = {
                     navController.navigate(Screen.StockRelease.route)
-                }
+                },
+                onProfileClick = {
+                    navController.navigate(Screen.Profile.route)}
             )
         }
 
@@ -173,6 +177,15 @@ fun OnboardingNavController() {
         }
         composable(Screen.StockRelease.route) {
             StockRelease(
+                modifier = Modifier,
+                navController = navController,
+                onNextClick = {
+
+                }
+            )
+        }
+        composable(Screen.Profile.route) {
+            profile (
                 modifier = Modifier,
                 navController = navController,
                 onNextClick = {

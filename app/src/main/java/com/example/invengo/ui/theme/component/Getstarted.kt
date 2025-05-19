@@ -81,7 +81,9 @@ fun Getstarted(modifier: Modifier, onNextClick: () -> Unit) {
                     .align(alignment = Alignment.BottomCenter)
                     .offset(y = 20.dp)
                 )
-                Text(modifier = Modifier, fontSize = 17.sp, textAlign = TextAlign.Center, fontWeight = FontWeight(700), text = "Get started with InvenGo and experience the future of inventory management today!")
+                    Box(Modifier.width(400.dp).align(alignment = Alignment.BottomCenter)) {
+                        Text(modifier = Modifier, fontSize = 17.sp, textAlign = TextAlign.Center, fontWeight = FontWeight(700), text = "Get started with InvenGo and experience the future of inventory management today!")
+                    }
                 }
                 Box(modifier = Modifier.fillMaxWidth().height(200.dp)){
                 Button(onNextClick, Modifier.align(alignment = Alignment.BottomCenter), colors = ButtonDefaults.buttonColors(containerColor = Color.Black), shape = RoundedCornerShape(20.dp)) {
