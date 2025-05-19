@@ -4,83 +4,77 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import androidx.lifecycle.ViewModel
-import com.example.invengo.auth.SignInResult
 import com.example.invengo.auth.UserData
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 
-class GoogleAuthUIClient (private val context: Context, private val oneTapClient: SignInClient): ViewModel(){
+class GoogleAuthUIClient(
+    private val context: Context,
+    private val oneTapClient: SignInClient
+) : ViewModel() {
     private val auth = Firebase.auth
 
-
-    suspend fun signIn (): IntentSender? {
-        val result =
-            try{
-                oneTapClient.beginSignIn(
-                    buildSignInRequest()
-                ).await()
-            } catch (e:Exception){
-                e.printStackTrace()
-                if(e is CancellationException) throw e
-                null
-            }
+    suspend fun signIn(): IntentSender? {
+        val result = try {
+            oneTapClient.beginSignIn(buildSignInRequest()).await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+            null
+        }
         return result?.pendingIntent?.intentSender
     }
-    //get credential, then save the userdata
-    suspend fun signInWithIntent(intent: Intent): SignInResult {
+
+    // Fungsi ini mengembalikan UserData? dan bukan SignInResult
+    suspend fun signInWithIntent(intent: Intent): UserData? {
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
         val googleIdToken = credential.googleIdToken
-        val googleCredential = GoogleAuthProvider.getCredential(googleIdToken,null)
-        return try{
+        val googleCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
+        return try {
             val user = auth.signInWithCredential(googleCredential).await().user
-            SignInResult(
-                data = user?.run {
-                    UserData(
-                        userId = uid,
-                        username = displayName,
-                        ProfilePict = photoUrl?.toString()
-                    )
-                },
-                errorMessage = null
-            )
-        } catch (e:Exception){
+            user?.let {
+                UserData(
+                    userId = it.uid,
+                    username = it.displayName,
+                    ProfilePictureUrl = it.photoUrl?.toString(),
+                    email = it.email,
+                    data = TODO()
+                )
+            }
+        } catch (e: Exception) {
             e.printStackTrace()
-            if(e is CancellationException) throw e
-            SignInResult(
-                data = null,
-                errorMessage = e.message
-            )
+            if (e is CancellationException) throw e
+            null
         }
     }
 
-    //sign Out
-    suspend fun signOut(){
+    suspend fun signOut() {
         try {
             oneTapClient.signOut().await()
             auth.signOut()
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
         }
     }
 
-    //getSignInUser
-    fun getSignedUser(): UserData? = auth.currentUser?.run {
+    fun getSignedInUser(): UserData? = auth.currentUser?.run {
         UserData(
             userId = uid,
             username = displayName,
-            ProfilePict = photoUrl?.toString()
+            ProfilePictureUrl = photoUrl?.toString(),
+            email = email,
+            data = TODO()
         )
     }
 
-    //sign in request
-    private fun buildSignInRequest(): BeginSignInRequest{
+    private fun buildSignInRequest(): BeginSignInRequest {
         return BeginSignInRequest.Builder()
             .setGoogleIdTokenRequestOptions(
                 GoogleIdTokenRequestOptions.builder()

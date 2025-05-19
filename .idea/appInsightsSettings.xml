@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.invengo" />
-                  <option name="mobileSdkAppId" value="1:73300987529:android:21952c809efcae1a3f0058" />
-                  <option name="projectId" value="invengo-17f91" />
-                  <option name="projectNumber" value="73300987529" />
+                  <option name="mobileSdkAppId" value="1:1004455573154:android:0712c9eb9216dd4ddf49fb" />
+                  <option name="projectId" value="inventgo-88805" />
+                  <option name="projectNumber" value="1004455573154" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
