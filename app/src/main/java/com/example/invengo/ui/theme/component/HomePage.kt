@@ -1,5 +1,6 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,13 @@ import androidx.navigation.NavController
 import com.example.invengo.R
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier, navController: NavController, onNextClick: () -> Unit) {
+fun HomePage(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    onItemDataClick: () -> Unit,
+    onInboundStockClick: () -> Unit,
+    onStockReleaseClick: () -> Unit
+) {
     Box(Modifier.fillMaxSize().background(color = Color.Black)) {
         Image(
             painter = painterResource(id = R.drawable.frame),
@@ -52,7 +59,9 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController, onNext
                 Image(
                     painter = painterResource(id = R.drawable.menu),
                     contentDescription = null,
-                    modifier = Modifier.size(25.dp)
+                    modifier = Modifier.size(25.dp).clickable {
+
+                    }
                 )
             }
 
@@ -61,7 +70,9 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController, onNext
                 fontSize = 23.sp,
                 textAlign = TextAlign.Center,
                 color = Color.White,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).clickable {
+
+                },
             )
 
             Image(
@@ -87,11 +98,11 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController, onNext
                     .wrapContentHeight()
                     .size(230.dp)
             )
-                Button(onNextClick, modifier = Modifier.align(Alignment.BottomEnd), colors = ButtonDefaults.buttonColors(Color.Transparent),contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp)) {
+                Button( onClick = onItemDataClick, modifier = Modifier.align(Alignment.BottomEnd), colors = ButtonDefaults.buttonColors(Color.Transparent),contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp)) {
                     Image(
                         painter = painterResource(R.drawable.arrowclone),
                         contentDescription = null,
-                        modifier = Modifier.size(58.dp)
+                        modifier = Modifier.size(58.dp),
                     )
                 }
                 Column(
@@ -118,11 +129,11 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController, onNext
                     .wrapContentHeight()
                     .size(230.dp)
             )
-                Button(onNextClick, modifier = Modifier.align(Alignment.BottomEnd), colors = ButtonDefaults.buttonColors(Color.Transparent), contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp)) {
+                Button( onClick = onInboundStockClick, modifier = Modifier.align(Alignment.BottomEnd), colors = ButtonDefaults.buttonColors(Color.Transparent), contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp)) {
                     Image(
                         painter = painterResource(R.drawable.arrowclone),
                         contentDescription = null,
-                        modifier = Modifier.size(58.dp)
+                        modifier = Modifier.size(58.dp),
                     )
                 }
                 Column(Modifier.fillMaxWidth().padding(horizontal = 33.dp, vertical = 10.dp)){
@@ -146,7 +157,7 @@ fun HomePage(modifier: Modifier = Modifier, navController: NavController, onNext
                     .wrapContentHeight()
                     .size(230.dp)
             )
-                Button(onNextClick, modifier = Modifier.align(Alignment.BottomEnd), colors = ButtonDefaults.buttonColors(Color.Transparent), contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp)) {
+                Button(onClick = onStockReleaseClick, modifier = Modifier.align(Alignment.BottomEnd), colors = ButtonDefaults.buttonColors(Color.Transparent), contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp)) {
                     Image(
                         painter = painterResource(R.drawable.arrowclone),
                         contentDescription = null,

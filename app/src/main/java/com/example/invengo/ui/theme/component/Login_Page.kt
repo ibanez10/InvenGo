@@ -125,7 +125,7 @@ fun Login_Page(
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(
-                                BorderStroke(1.dp, if (isFocused1) Color.Green else Color.Gray),
+                                BorderStroke(1.5.dp, if (isFocused1) Teal else Color.Gray),
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .onFocusChanged { isFocused1 = it.isFocused },
@@ -159,7 +159,7 @@ fun Login_Page(
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(
-                                BorderStroke(1.dp, if (isFocused) Color.Green else Color.Gray),
+                                BorderStroke(1.5.dp, if (isFocused) Teal else Color.Gray),
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .onFocusChanged { isFocused = it.isFocused },
@@ -228,7 +228,6 @@ fun Login_Page(
 
                     Spacer(Modifier.height(15.dp))
 
-
                     Button(
                         onClick = {
                             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -252,7 +251,7 @@ fun Login_Page(
                                 modifier = Modifier.size(30.dp)
                             )
                             Spacer(Modifier.width(15.dp))
-                            Text("Continue with Google", fontSize = 16.sp)
+                            Text("Continue with Google", fontSize = 16.sp, color = Color.White)
                         }
                     }
                 }

@@ -8,7 +8,6 @@ plugins {
 android {
     namespace = "com.example.invengo"
     compileSdk = 35
-
     defaultConfig {
         applicationId = "com.example.invengo"
         minSdk = 24
@@ -18,7 +17,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -58,7 +56,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
+    implementation ("androidx.activity:activity-compose:1.7.2")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 //    Firebase Authentication
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.google.firebase:firebase-auth-ktx")
@@ -72,4 +71,7 @@ dependencies {
 
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
+
+//    Animasi pindah halaman
+    implementation ("com.google.accompanist:accompanist-navigation-animation:0.34.0")
 }

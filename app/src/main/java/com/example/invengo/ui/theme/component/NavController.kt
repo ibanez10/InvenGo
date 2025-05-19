@@ -26,43 +26,55 @@ import kotlinx.coroutines.launch
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
 sealed class Screen(val route: String) {
-    object Page1 : Screen("onboarding_first")
-    object Page2 : Screen("getstarted")
-    object Page3 : Screen("login_page") // Email/Google Login Page
-    object Page4 : Screen("home_page_first") // Home
-    object Page5 : Screen("itemData")
-    object Page6 : Screen("AddItem")
+    object OnboardingFirst : Screen("onboarding_first")
+    object OnboardingSeccond : Screen("onboarding_seccond")
+    object GetStarted : Screen("getstarted")
+    object LoginPage : Screen("login_page") // Email/Google Login Page
+    object HomePage : Screen("home_page_first") // Home
+    object ItemData : Screen("itemData")
+    object AddItem : Screen("AddItem")
+    object InboundStock : Screen("InboundStock")
+    object StockRelease : Screen("StockRelease")
 }
 
 @Composable
 fun OnboardingNavController() {
     val navController = rememberNavController()
-
     NavHost(
         navController = navController,
-        startDestination = Screen.Page1.route,
+        startDestination = Screen.OnboardingFirst.route,
         modifier = Modifier.fillMaxSize()
     ) {
-        composable(Screen.Page1.route) {
+        composable(Screen.OnboardingFirst.route) {
             Onboarding_First(
                 modifier = Modifier,
                 navController = navController,
                 onNextClick = {
-                    navController.navigate(Screen.Page2.route)
+                    navController.navigate(Screen.OnboardingSeccond.route)
                 }
             )
         }
 
-        composable(Screen.Page2.route) {
+        composable(Screen.OnboardingSeccond.route) {
+            Onboarding_Seccond(
+                modifier = Modifier,
+                navController = navController,
+                onNextClick = {
+                    navController.navigate(Screen.GetStarted.route)
+                }
+            )
+        }
+
+        composable(Screen.GetStarted.route) {
             Getstarted(
                 modifier = Modifier,
                 onNextClick = {
-                    navController.navigate(Screen.Page3.route)
+                    navController.navigate(Screen.LoginPage.route)
                 }
             )
         }
 
-        composable(Screen.Page3.route) {
+        composable(Screen.LoginPage.route) {
             val context = LocalContext.current
             val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -101,7 +113,7 @@ fun OnboardingNavController() {
                 modifier = Modifier,
                 navController = navController,
                 onNextClick = {
-                    navController.navigate(Screen.Page3.route)
+                    navController.navigate(Screen.LoginPage.route)
                 },
                 onSignInClick = {
                     lifecycleOwner.lifecycleScope.launch {
@@ -116,26 +128,51 @@ fun OnboardingNavController() {
                 state = state
             )
         }
-        composable(Screen.Page4.route) {
+        composable(Screen.HomePage.route) {
             HomePage(
                 modifier = Modifier,
                 navController = navController,
-                onNextClick = {
-                    navController.navigate(Screen.Page5.route)
+                onItemDataClick = {
+                    navController.navigate(Screen.ItemData.route)
+                },
+                onInboundStockClick = {
+                    navController.navigate(Screen.InboundStock.route)
+                },
+                onStockReleaseClick = {
+                    navController.navigate(Screen.StockRelease.route)
                 }
             )
         }
-        composable(Screen.Page5.route) {
+
+        composable(Screen.ItemData.route) {
             ItemData (
                 modifier = Modifier,
                 navController = navController,
                 onNextClick = {
-                    navController.navigate(Screen.Page6.route)
+                    navController.navigate(Screen.AddItem.route)
                 }
             )
         }
-        composable(Screen.Page6.route) {
+        composable(Screen.AddItem.route) {
             AddItem (
+                modifier = Modifier,
+                navController = navController,
+                onNextClick = {
+
+                }
+            )
+        }
+        composable(Screen.InboundStock.route) {
+            InbounStock(
+                modifier = Modifier,
+                navController = navController,
+                onNextClick = {
+
+                }
+            )
+        }
+        composable(Screen.StockRelease.route) {
+            StockRelease(
                 modifier = Modifier,
                 navController = navController,
                 onNextClick = {

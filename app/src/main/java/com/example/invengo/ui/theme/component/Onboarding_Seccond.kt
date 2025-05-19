@@ -5,10 +5,28 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,61 +41,52 @@ import com.example.invengo.R
 import kotlin.math.roundToInt
 
 @Composable
-fun Onboarding_First(modifier: Modifier, navController: NavController, onNextClick: () -> Unit) {
-    Box(
-        Modifier
-            .fillMaxHeight()
-            .background(color = Color.Black)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.frame),
+fun Onboarding_Seccond(modifier: Modifier, navController: NavController, onNextClick: () -> Unit) {
+    Box(Modifier
+        .fillMaxHeight()
+        .background(color = Color.Black)){
+        Image(painter = painterResource(
+            id = R.drawable.frame),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
         )
-
-        // Garis navigasi atas
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.SpaceEvenly, // atau Arrangement.Center sesuai kebutuhan
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box {
-                Image(
-                    painter = painterResource(id = R.drawable.line),
-                    contentDescription = null,
-                    modifier = Modifier.size(160.dp)
-                )
-            }
-            Box {
+            Box(
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.linegray),
                     contentDescription = null,
-                    modifier = Modifier.size(160.dp)
+                    modifier =Modifier.size(160.dp),
+                )
+            }
+            Box(
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.line),
+                    contentDescription = null,
+                    modifier = Modifier.size(160.dp) // gunakan ukuran yang sesuai, bukan fillMaxWidth
                 )
             }
         }
-
-        // Icon utama
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(600.dp)
-                .padding(25.dp),
-            contentAlignment = Alignment.Center
-        ) {
+        Box(Modifier
+            .fillMaxWidth()
+            .height(600.dp)
+            .padding(25.dp), contentAlignment = Alignment.Center){
             Image(
-                painter = painterResource(R.drawable.iconnew),
+                painter = painterResource(R.drawable.boxsolar),
                 contentDescription = null,
                 modifier = Modifier.size(250.dp)
             )
         }
-
-        // Konten bawah
         Column(
             Modifier
                 .fillMaxWidth()
@@ -153,3 +162,5 @@ fun Onboarding_First(modifier: Modifier, navController: NavController, onNextCli
         }
     }
 }
+
+

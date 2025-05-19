@@ -1,5 +1,6 @@
 package com.example.invengo
 
+import ItemData
 import android.app.Activity.RESULT_OK
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.invengo.auth.SignInResult
 import com.example.invengo.auth.SignInViewModel
+import com.example.invengo.ui.theme.component.AddItem
 
 @Composable
 fun Navigation(modifier: Modifier = Modifier) {
@@ -25,5 +27,16 @@ fun Navigation(modifier: Modifier = Modifier) {
         composable(route = Screen.Login_Page.route){
 
         }
+        composable("item_data") {
+            ItemData(navController = navController) {
+                navController.navigate("add_item")
+            }
+        }
+        composable("add_item") {
+            AddItem(navController = navController, onNextClick = {
+                navController.popBackStack()
+            })
+        }
     }
 }
+

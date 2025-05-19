@@ -92,7 +92,7 @@ fun Getstarted(modifier: Modifier, onNextClick: () -> Unit) {
                             modifier = Modifier
                                 .size(40.dp)
                         )
-                    Text(text = "Get started for free", Modifier.padding(vertical = 10.dp, horizontal = 8.dp), fontSize = 16.sp)
+                    Text(text = "Get started for free", Modifier.padding(vertical = 10.dp, horizontal = 8.dp), fontSize = 16.sp, color = Color.White)
                     }
                 }
                 }

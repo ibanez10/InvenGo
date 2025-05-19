@@ -38,38 +38,11 @@ import com.example.invengo.ui.theme.Teal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddItem(
+fun InbounStock(
     modifier: Modifier = Modifier,
     navController: NavController,
     onNextClick: () -> Unit
 ) {
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    val context = LocalContext.current
-
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        selectedImageUri = uri
-    }
-
-    // Load ImageBitmap from Uri manually (without Coil)
-    val imageBitmap: ImageBitmap? = remember(selectedImageUri) {
-        selectedImageUri?.let { uri ->
-            try {
-                if (Build.VERSION.SDK_INT < 28) {
-                    @Suppress("DEPRECATION")
-                    android.provider.MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-                        .asImageBitmap()
-                } else {
-                    val source = ImageDecoder.createSource(context.contentResolver, uri)
-                    ImageDecoder.decodeBitmap(source).asImageBitmap()
-                }
-            } catch (e: Exception) {
-                null
-            }
-        }
-    }
-
     Image(
         painter = painterResource(id = R.drawable.frame),
         contentDescription = null,
@@ -94,7 +67,7 @@ fun AddItem(
                     )
                 }
                 Text(
-                    text = "Add Item",
+                    text = "Inbound Stock",
                     fontSize = 23.sp,
                     textAlign = TextAlign.Center,
                     color = Color.White,
@@ -104,65 +77,18 @@ fun AddItem(
             Spacer(Modifier.height(30.dp))
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(20.dp))
-            ) {
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .blur(16.dp)
-                        .background(Color.Black.copy(alpha = 0.3f))
-                )
-                Canvas(modifier = Modifier.matchParentSize()) {
-                    val strokeWidth = 4.dp.toPx()
-                    val dashWidth = 6.dp.toPx()
-                    val dashGap = 8.dp.toPx()
-                    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashWidth, dashGap), 0f)
-
-                    drawRoundRect(
-                        color = Teal,
-                        size = size,
-                        style = Stroke(width = strokeWidth, pathEffect = pathEffect),
-                        cornerRadius = CornerRadius(20f, 20f)
-                    )
-                }
-
-                if (imageBitmap == null) {
-                    Image(
-                        painter = painterResource(R.drawable.camera),
-                        contentDescription = "Pick Image",
-                        modifier = Modifier
-                            .size(70.dp)
-                            .align(Alignment.Center)
-                            .clickable {
-                                imagePickerLauncher.launch("image/*")
-                            }
-                    )
-                } else {
-                    Image(
-                        bitmap = imageBitmap,
-                        contentDescription = "Selected Image",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(20.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
+            )
             Spacer(Modifier.height(15.dp))
             Column(Modifier.fillMaxWidth()) {
                 var textItemId by remember { mutableStateOf("") }
                 var textItemName by remember { mutableStateOf("") }
                 var openingStock by remember { mutableStateOf("") }
-                var priceToSell1 by remember { mutableStateOf("") }
-                var priceToSell2 by remember { mutableStateOf("") }
+                var Description by remember { mutableStateOf("") }
                 var isFocused1 by remember { mutableStateOf(false) }
                 var isFocused2 by remember { mutableStateOf(false) }
                 var isFocused3 by remember { mutableStateOf(false) }
                 var isFocused4 by remember { mutableStateOf(false) }
-                var isFocused5 by remember { mutableStateOf(false) }
-                Text(text = "Item ID", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
+                Text(text = "Select Date", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
                 Spacer(modifier.padding(5.dp))
                 TextField(
                     value = textItemId,
@@ -175,7 +101,7 @@ fun AddItem(
                             shape = RoundedCornerShape(10.dp)
                         )
                         .onFocusChanged { isFocused1 = it.isFocused },
-                    label = { Text("Item ID", color = Color.Gray) },
+                    label = { Text("Chose Date", color = Color.Gray) },
                     textStyle = LocalTextStyle.current.copy(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -187,11 +113,21 @@ fun AddItem(
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent
                     ),
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.date
+                            ),
+                            contentDescription = null,
+                            modifier = Modifier.size(25.dp),
+                            tint = Color.Unspecified
+                        )
+                    },
                     maxLines = 1
                 )
 
                 Spacer(modifier.height(10.dp))
-                Text(text = "Item Name", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
+                Text(text = "Product Name", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
                 Spacer(modifier.padding(5.dp))
                 TextField(
                     value = textItemName,
@@ -204,7 +140,7 @@ fun AddItem(
                             shape = RoundedCornerShape(10.dp)
                         )
                         .onFocusChanged { isFocused2 = it.isFocused },
-                    label = { Text("Item Name", color = Color.Gray) },
+                    label = { Text("Select Item", color = Color.Gray) },
                     textStyle = LocalTextStyle.current.copy(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -220,7 +156,7 @@ fun AddItem(
                 )
 
                 Spacer(modifier.height(10.dp))
-                Text(text = "Opening Stock", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
+                Text(text = "Quantity", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
                 Spacer(modifier.padding(5.dp))
                 TextField(
                     value = openingStock,
@@ -236,7 +172,7 @@ fun AddItem(
                             shape = RoundedCornerShape(10.dp)
                         )
                         .onFocusChanged { isFocused3 = it.isFocused },
-                    label = { Text("Opening Stock", color = Color.Gray) },
+                    label = { Text("Ex.5", color = Color.Gray) },
                     textStyle = LocalTextStyle.current.copy(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -254,84 +190,47 @@ fun AddItem(
                     maxLines = 1
                 )
                 Spacer(modifier.height(10.dp))
-                Text(text = "Price To Sell", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
+                Text(text = "Description", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
                 Spacer(modifier.padding(5.dp))
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
-                ){
-                    TextField(
-                        value = priceToSell1,
-                        onValueChange = { priceToSell1 = it },
-                        modifier = Modifier
-                            .width(170.dp)
-                            .padding(5.dp)
-                            .background(color = Color.Gray, shape = RoundedCornerShape(10.dp))
-                            .border(
-                                BorderStroke(1.5.dp, if (isFocused4) Teal else Color.Transparent),
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                            .onFocusChanged { isFocused4 = it.isFocused },
-                        label = { Text("Retail Price", color = Color.White, textAlign = TextAlign.Center) },
-                        textStyle = LocalTextStyle.current.copy(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        ),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent
-                        ),
-                        maxLines = 1
-                    )
-                    TextField(
-                        value = priceToSell2,
-                        onValueChange = { // Hanya izinkan angka
-                            if (it.all { char -> char.isDigit() }) {
-                                priceToSell2 = it
-                            }},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(5.dp)
-                            .background(color = Color.Transparent, shape = RoundedCornerShape(10.dp))
-                            .border(
-                                BorderStroke(1.5.dp, if (isFocused5) Teal else Color.Gray),
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                            .onFocusChanged { isFocused5 = it.isFocused },
-                        label = { Text("Enter a Number", color = Color.Gray, textAlign = TextAlign.Center, fontWeight = FontWeight(600)) },
-                        textStyle = LocalTextStyle.current.copy(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        ),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
-                        ),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent
-                        ),
-                        maxLines = 1
-                    )
+                TextField(
+                    value = Description,
+                    onValueChange = { Description = it},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(130.dp)
+                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
+                        .border(
+                            BorderStroke(1.5.dp, if (isFocused4) Teal else Color.Transparent),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .onFocusChanged { isFocused4 = it.isFocused },
+                    label = { Text("Add additional notes about the stock item...", color = Color.Gray) },
+                    textStyle = LocalTextStyle.current.copy(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    ),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    ),
+                    maxLines = 1
+                )
+                Spacer(Modifier.padding(10.dp))
+                Button(
+                    onClick = {
+                        onNextClick()
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Teal)
+                ) {
+                    Spacer(Modifier.padding(vertical = 20.dp))
+                    Text("Save", fontSize = 20.sp)
                 }
-            }
-            Spacer(Modifier.padding(10.dp))
-            Button(
-                onClick = {
-                    onNextClick()
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Teal)
-            ) {
-                Spacer(Modifier.padding(vertical = 20.dp))
-                Text("Save", fontSize = 20.sp)
-            }
         }
     }
+}
 }
