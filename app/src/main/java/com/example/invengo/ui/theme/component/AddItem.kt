@@ -3,6 +3,7 @@ package com.example.invengo.ui.theme.component
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -35,6 +36,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.invengo.R
 import com.example.invengo.ui.theme.Teal
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import com.google.firebase.auth.FirebaseAuth
+import java.util.UUID
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import android.widget.Toast
+import com.google.firebase.Timestamp
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +56,7 @@ fun AddItem(
     navController: NavController,
     onNextClick: () -> Unit
 ) {
+    val scrollState = rememberScrollState()
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
 
@@ -70,6 +84,17 @@ fun AddItem(
         }
     }
 
+    var textItemId by remember { mutableStateOf("") }
+    var textItemName by remember { mutableStateOf("") }
+    var openingStock by remember { mutableStateOf("") }
+    var priceToSell1 by remember { mutableStateOf("") }
+    var priceToSell2 by remember { mutableStateOf("") }
+    var isFocused1 by remember { mutableStateOf(false) }
+    var isFocused2 by remember { mutableStateOf(false) }
+    var isFocused3 by remember { mutableStateOf(false) }
+    var isFocused4 by remember { mutableStateOf(false) }
+    var isFocused5 by remember { mutableStateOf(false) }
+
     Image(
         painter = painterResource(id = R.drawable.frame),
         contentDescription = null,
@@ -77,7 +102,11 @@ fun AddItem(
         modifier = Modifier.fillMaxSize()
     )
     Box(Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 20.dp)) {
-        Column {
+        Column (
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+        ){
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -152,16 +181,6 @@ fun AddItem(
             }
             Spacer(Modifier.height(15.dp))
             Column(Modifier.fillMaxWidth()) {
-                var textItemId by remember { mutableStateOf("") }
-                var textItemName by remember { mutableStateOf("") }
-                var openingStock by remember { mutableStateOf("") }
-                var priceToSell1 by remember { mutableStateOf("") }
-                var priceToSell2 by remember { mutableStateOf("") }
-                var isFocused1 by remember { mutableStateOf(false) }
-                var isFocused2 by remember { mutableStateOf(false) }
-                var isFocused3 by remember { mutableStateOf(false) }
-                var isFocused4 by remember { mutableStateOf(false) }
-                var isFocused5 by remember { mutableStateOf(false) }
                 Text(text = "Item ID", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
                 Spacer(modifier.padding(5.dp))
                 TextField(
@@ -323,14 +342,67 @@ fun AddItem(
             Spacer(Modifier.padding(10.dp))
             Button(
                 onClick = {
-                    onNextClick()
+                    val currentUser = FirebaseAuth.getInstance().currentUser
+                    val uid = currentUser?.uid
+                    if (uid != null) {
+                        val db = Firebase.firestore
+                        val storage = Firebase.storage
+                        val itemId = textItemId
+                        val itemData = hashMapOf(
+                            "item_id" to textItemId,
+                            "name" to textItemName,
+                            "opening_stock" to openingStock.toInt(),
+                            "retail_price" to priceToSell1,
+                            "numeric_price" to priceToSell2.toIntOrNull(),
+                            "created_at" to Timestamp.now()
+                        )
+
+                        if (selectedImageUri != null) {
+                            val imageRef = storage.reference.child("item_images/${UUID.randomUUID()}.jpg")
+                            imageRef.putFile(selectedImageUri!!)
+                                .addOnSuccessListener {
+                                    imageRef.downloadUrl.addOnSuccessListener { uri ->
+                                        itemData["image_url"] = uri.toString()
+
+                                        db.collection("users").document(uid).collection("items")
+                                            .document(textItemId)
+                                            .set(itemData)
+                                            .addOnSuccessListener {
+                                                Toast.makeText(context, "Data berhasil disimpan", Toast.LENGTH_SHORT).show()
+                                                onNextClick() // kembali ke halaman awal
+                                            }
+                                    }
+                                }
+                        } else {
+                            db.collection("users").document(uid).collection("items")
+                                .document(textItemId)
+                                .set(itemData)
+                                .addOnSuccessListener {
+                                    Toast.makeText(context, "Data berhasil disimpan", Toast.LENGTH_SHORT).show()
+                                    textItemId = ""
+                                    textItemName = ""
+                                    openingStock = ""
+                                    priceToSell1 = ""
+                                    priceToSell2 = ""
+                                    selectedImageUri = null
+                                    onNextClick()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(context, "Gagal menyimpan data", Toast.LENGTH_SHORT).show()
+                                }
+                        }
+                    }
                 },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Teal)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp),
+                shape = RoundedCornerShape(15.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Teal,
+                    contentColor = Color.White
+                )
             ) {
-                Spacer(Modifier.padding(vertical = 20.dp))
-                Text("Save", fontSize = 20.sp)
+                Text("Save", fontSize = 20.sp, fontWeight = FontWeight.Bold)
             }
         }
     }

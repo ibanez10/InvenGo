@@ -34,14 +34,20 @@ class AuthViewModel : ViewModel() {
     fun loginWithGoogleIntent(data: Intent?, onSuccess: () -> Unit, onError: (String) -> Unit) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         try {
-            val account = task.getResult(ApiException::class.java) // Menggunakan ApiException untuk menangani kesalahan
+            val account = task.getResult(ApiException::class.java)
+
+            // Ambil informasi akun untuk log/debug
+            val photoUrl = account.photoUrl
+            Log.d("AuthViewModel", "DisplayName: ${account.displayName}")
+            Log.d("AuthViewModel", "PhotoURL: $photoUrl")
+
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
             auth.signInWithCredential(credential)
                 .addOnSuccessListener { onSuccess() }
                 .addOnFailureListener { onError(it.message ?: "Google Sign-In failed") }
         } catch (e: ApiException) {
             Log.w("AuthViewModel", "Google sign in failed", e)
-            onError("Google Sign-In failed: ${e.statusCode}") // Menyediakan kode status untuk debugging
+            onError("Google Sign-In failed: ${e.statusCode}")
         } catch (e: Exception) {
             Log.e("AuthViewModel", "Error during Google sign in", e)
             onError(e.message ?: "Google Sign-In failed")

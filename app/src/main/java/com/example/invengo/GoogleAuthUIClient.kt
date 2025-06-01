@@ -4,13 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import androidx.lifecycle.ViewModel
+import com.example.invengo.auth.SignInResult
 import com.example.invengo.auth.UserData
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 
@@ -18,6 +19,7 @@ class GoogleAuthUIClient(
     private val context: Context,
     private val oneTapClient: SignInClient
 ) : ViewModel() {
+
     private val auth = Firebase.auth
 
     suspend fun signIn(): IntentSender? {
@@ -31,26 +33,29 @@ class GoogleAuthUIClient(
         return result?.pendingIntent?.intentSender
     }
 
-    // Fungsi ini mengembalikan UserData? dan bukan SignInResult
-    suspend fun signInWithIntent(intent: Intent): UserData? {
+    suspend fun signInWithIntent(intent: Intent): SignInResult {
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
         val googleIdToken = credential.googleIdToken
         val googleCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
         return try {
             val user = auth.signInWithCredential(googleCredential).await().user
-            user?.let {
-                UserData(
-                    userId = it.uid,
-                    username = it.displayName,
-                    ProfilePictureUrl = it.photoUrl?.toString(),
-                    email = it.email,
-                    data = TODO()
-                )
-            }
+            SignInResult(
+                data = user?.run {
+                    UserData(
+                        userId = uid,
+                        username = displayName,
+                        profilePict = photoUrl?.toString()
+                    )
+                },
+                errorMessage = null
+            )
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
-            null
+            SignInResult(
+                data = null,
+                errorMessage = e.message
+            )
         }
     }
 
@@ -64,13 +69,11 @@ class GoogleAuthUIClient(
         }
     }
 
-    fun getSignedInUser(): UserData? = auth.currentUser?.run {
+    fun getSignedUser(): UserData? = auth.currentUser?.run {
         UserData(
             userId = uid,
             username = displayName,
-            ProfilePictureUrl = photoUrl?.toString(),
-            email = email,
-            data = TODO()
+            profilePict = photoUrl?.toString()
         )
     }
 

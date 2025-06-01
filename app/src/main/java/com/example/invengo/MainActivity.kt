@@ -19,11 +19,12 @@ import com.example.invengo.ui.theme.InvenGoTheme
 import com.example.invengo.ui.theme.component.Splash
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         setContent {
             InvenGoTheme {
                 val navController = rememberNavController()
