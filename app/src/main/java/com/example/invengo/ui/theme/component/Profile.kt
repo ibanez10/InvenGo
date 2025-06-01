@@ -54,8 +54,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 
-
-
 @Composable
 fun profile(modifier: Modifier = Modifier, navController: NavController, onNextClick: () -> Unit) {
     val scrollState = rememberScrollState()
@@ -86,8 +84,6 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
     }
 
 
-
-
     Box(
         Modifier.fillMaxSize().background(color = Color.Black)
     ) {
@@ -97,7 +93,7 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-        Column( Modifier.padding(vertical = 20.dp, horizontal = 20.dp).verticalScroll(scrollState)) {
+        Column( Modifier.padding(vertical = 20.dp, horizontal = 10.dp).verticalScroll(scrollState)) {
             Button(
                 onClick = { navController.popBackStack() },
                 colors = ButtonDefaults.textButtonColors(contentColor = Color.Transparent),
@@ -122,7 +118,11 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
                     .fillMaxWidth()
                     .background(
                         brush = Brush.horizontalGradient(
-                            colors = listOf(Color.DarkGray, Teal, Color.DarkGray),
+                            colors = listOf(
+                                Color.DarkGray,
+                                Teal,
+                                Color.DarkGray,
+                            ),
                         ),
                         shape = RoundedCornerShape(20.dp)
                     )
@@ -156,8 +156,7 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
                         )
                         Spacer(Modifier.width(8.dp))
                         Box(
-                            Modifier
-                                .background(color = Teal, shape = RoundedCornerShape(20.dp))
+                            Modifier.background(color = Teal, shape = RoundedCornerShape(20.dp))
                                 .padding(horizontal = 10.dp)
                         ) {
                             Text(text = "Admin", color = Color.White, fontSize = 14.sp)
@@ -167,7 +166,6 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
                     Text(text = email, color = Color.LightGray, fontSize = 14.sp)
                 }
             }
-
             Spacer(Modifier.height(30.dp))
             Box(
                 Modifier
@@ -180,7 +178,7 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
                         Modifier
                             .padding(horizontal = 20.dp, vertical = 0.dp)
                             .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically // <-- kuncinya di sini
+                            verticalAlignment = Alignment.CenterVertically // <-- kuncinya di sini
                     ) {
                         Image(
                             painter = painterResource(R.drawable.time),
@@ -197,7 +195,7 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
                     Column(
                         Modifier
                             .fillMaxWidth()
-                            .height(350.dp)
+                            .height(250.dp)
                             .padding()
                             .background(
                                 brush = Brush.verticalGradient(
