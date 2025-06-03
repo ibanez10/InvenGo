@@ -44,6 +44,7 @@ import java.util.UUID
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import android.widget.Toast
+import com.example.invengo.ui.theme.GrayB
 import com.google.firebase.Timestamp
 
 
@@ -131,54 +132,6 @@ fun AddItem(
                 )
             }
             Spacer(Modifier.height(30.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(20.dp))
-            ) {
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .blur(16.dp)
-                        .background(Color.Black.copy(alpha = 0.3f))
-                )
-                Canvas(modifier = Modifier.matchParentSize()) {
-                    val strokeWidth = 4.dp.toPx()
-                    val dashWidth = 6.dp.toPx()
-                    val dashGap = 8.dp.toPx()
-                    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashWidth, dashGap), 0f)
-
-                    drawRoundRect(
-                        color = Teal,
-                        size = size,
-                        style = Stroke(width = strokeWidth, pathEffect = pathEffect),
-                        cornerRadius = CornerRadius(20f, 20f)
-                    )
-                }
-
-                if (imageBitmap == null) {
-                    Image(
-                        painter = painterResource(R.drawable.camera),
-                        contentDescription = "Pick Image",
-                        modifier = Modifier
-                            .size(70.dp)
-                            .align(Alignment.Center)
-                            .clickable {
-                                imagePickerLauncher.launch("image/*")
-                            }
-                    )
-                } else {
-                    Image(
-                        bitmap = imageBitmap,
-                        contentDescription = "Selected Image",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(20.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
             Spacer(Modifier.height(15.dp))
             Column(Modifier.fillMaxWidth()) {
                 Text(text = "Item ID", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
@@ -188,7 +141,7 @@ fun AddItem(
                     onValueChange = { textItemId = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
+                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused1) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
@@ -217,7 +170,7 @@ fun AddItem(
                     onValueChange = { textItemName = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
+                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused2) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
@@ -249,7 +202,7 @@ fun AddItem(
                         }},
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
+                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused3) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
@@ -277,7 +230,7 @@ fun AddItem(
                 Spacer(modifier.padding(5.dp))
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
+                    .background(color = GrayB, shape = RoundedCornerShape(10.dp))
                 ){
                     TextField(
                         value = priceToSell1,

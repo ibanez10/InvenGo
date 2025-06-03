@@ -94,9 +94,9 @@ fun Onboarding_Seccond(modifier: Modifier, navController: NavController, onNextC
                 .align(Alignment.BottomStart)
                 .padding(25.dp)
         ) {
-            Text(text = "Welcome", fontSize = 25.sp, color = Color.Gray)
+            Text(text = "InvenGo", fontSize = 25.sp, color = Color.Gray)
             Text(
-                text = "Lorem ipsum dolor amey sin",
+                text = "Save your Time !",
                 fontSize = 40.sp,
                 color = Color.LightGray,
                 lineHeight = 40.sp,
@@ -104,7 +104,7 @@ fun Onboarding_Seccond(modifier: Modifier, navController: NavController, onNextC
             )
             Spacer(Modifier.height(15.dp))
             Text(
-                text = "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco",
+                text = "You can do more work in the same time with InvenGo",
                 fontSize = 20.sp,
                 color = Color.LightGray
             )
@@ -162,5 +162,3 @@ fun Onboarding_Seccond(modifier: Modifier, navController: NavController, onNextC
         }
     }
 }
-
-

@@ -85,9 +85,9 @@ fun Onboarding_First(modifier: Modifier, navController: NavController, onNextCli
                 .align(Alignment.BottomStart)
                 .padding(25.dp)
         ) {
-            Text(text = "Welcome", fontSize = 25.sp, color = Color.Gray)
+            Text(text = "InvenGo", fontSize = 25.sp, color = Color.Gray)
             Text(
-                text = "Lorem ipsum dolor amey sin",
+                text = "Maximize your Job",
                 fontSize = 40.sp,
                 color = Color.LightGray,
                 lineHeight = 40.sp,
@@ -95,7 +95,7 @@ fun Onboarding_First(modifier: Modifier, navController: NavController, onNextCli
             )
             Spacer(Modifier.height(15.dp))
             Text(
-                text = "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco",
+                text = "Enjoy your work experience with real-time storage application",
                 fontSize = 20.sp,
                 color = Color.LightGray
             )

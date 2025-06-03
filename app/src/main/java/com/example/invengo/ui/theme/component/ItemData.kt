@@ -1,6 +1,7 @@
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,11 +39,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import com.example.invengo.ui.theme.Teal
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 @Composable
@@ -176,7 +183,7 @@ fun ItemData(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 40.dp)
+                        .padding(top = 180.dp)
                 ) {
                     Image(
                         painter = painterResource(R.drawable.canot),
@@ -197,34 +204,79 @@ fun ItemData(
                         .padding(top = 10.dp, bottom = 80.dp)
                 ) {
                     items(items) { item ->
+                        val createdAt = item["created_at"]
+                        val dateString = if (createdAt is Timestamp) {
+                            val date = createdAt.toDate()
+                            val formatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+                            formatter.format(date)
+                        } else {
+                            "-"
+                        }
+                        val date = null
+                        Column(
+                            Modifier
+                                .background(Teal, shape = RoundedCornerShape(20.dp))
+                        ) {
+                            Row(
+                                Modifier
+                                    .padding( top = 10.dp, end = 20.dp, start = 20.dp, bottom = 5.dp)
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ){
+                                Text(
+                                    text = "${dateString ?: "-"}",
+                                    color = Color.White,
+                                    fontSize = 15.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            Text(
+                                text = "${item["item_id"] ?: "-"}",
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.End,
+                                modifier = Modifier.weight(1f)
+                            )
+                            }
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 6.dp)
-                                .background(Color(0xFF1E1E1E), shape = RoundedCornerShape(12.dp))
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(Color.Gray, Color.DarkGray),
+                                    ),
+                                    shape = RoundedCornerShape(20.dp))
                                 .padding(16.dp)
                         ) {
+                            Row( horizontalArrangement = Arrangement.SpaceBetween) {
                             Text(
-                                text = "ID: ${item["item_id"] ?: "-"}",
+                                text = "${item["name"] ?: "-"}",
                                 color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
+                                fontSize = 23.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.weight(1f)
                             )
+                                Spacer(Modifier.height(30.dp))
                             Text(
-                                text = "Nama: ${item["name"] ?: "-"}",
-                                color = Color.White,
-                                fontSize = 14.sp,
+                                text = "${item["total_stock"] ?: "-"}",
+                                color = Color.Yellow,
+                                fontSize = 25.sp,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                fontWeight = FontWeight(600),
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.End,
+                                modifier = Modifier.weight(1f)
                             )
+                                Spacer(Modifier.height(30.dp))
+                            }
                             Text(
-                                text = "Total Stok: ${item["total_stock"] ?: "-"} | Harga: ${item["retail_price"] ?: "-"}",
-                                color = Color.Gray,
-                                fontSize = 13.sp
+                                text = "${item["numeric_price"] ?: "-"} | Harga: ${item["retail_price"] ?: "-"}",
+                                color = Color.Green,
+                                fontSize = 16.sp
                             )
-
-                        }
-                        Spacer(modifier.padding(start= 2.dp,top=5.dp,5.dp))
+                        Spacer(modifier.padding(start= 2.dp,top = 11.dp,5.dp))
                         Button(
                             onClick = {
                                 val itemId = item["item_id"].toString()
@@ -241,11 +293,10 @@ fun ItemData(
                                                 context, "Gagal menghapus ${itemId}", Toast.LENGTH_SHORT
                                             ).show()
                                         }
-
                                 }
                             },
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .width(100.dp)
                                 .height(35.dp),
                             shape = RoundedCornerShape(5.dp),
                             colors = ButtonDefaults.buttonColors(
@@ -253,8 +304,10 @@ fun ItemData(
                                 contentColor = Color.White
                             )
                         ) {
-                            Text("delete", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            Text("delete", fontSize = 17.sp, fontWeight = FontWeight.Bold)
                         }
+                        }}
+                        Spacer(Modifier.height(30.dp))
                     }
                 }
             }

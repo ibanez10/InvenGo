@@ -64,9 +64,6 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
     val context = LocalContext.current
     val items = remember { mutableStateListOf<Map<String, Any>>() }
     val historyScrollState = rememberScrollState()
-    val releases = remember { mutableStateListOf<Map<String, Any>>() }
-
-
     // Fetch data from Firestore
     val currentUser = FirebaseAuth.getInstance().currentUser
     val uid = currentUser?.uid
@@ -78,21 +75,6 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
                     items.clear()
                     for (document in result) {
                         items.add(document.data)
-                    }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(context, "Gagal mengambil data", Toast.LENGTH_SHORT).show()
-                }
-        }
-    }
-    LaunchedEffect(uid){
-        if (uid != null){
-            Firebase.firestore.collection("users").document(uid).collection("release")
-                .get()
-                .addOnSuccessListener { result->
-                    releases.clear()
-                    for (document in result){
-                        releases.add(document.data)
                     }
                 }
                 .addOnFailureListener {
@@ -275,77 +257,7 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
                                     )
                                 }
                             }
-                        }
-                        Column(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(350.dp)
-                                .padding()
-                                .background(
-                                    brush = Brush.verticalGradient(
-                                        colors = listOf(
-                                            Color.Black,
-                                            Color.DarkGray,
-                                            Color.Black,
-                                        )
-                                    ),
-                                    shape = RoundedCornerShape(30.dp)
-                                )
-                        ) {
-                            Row(Modifier
-                                .padding(20.dp)
-                                ,verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.stockout),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(25.dp)
-                                )
-                                Spacer(Modifier.width(5.dp))
-                                Text(text = "Inbound Stock", fontSize = 15.sp, color = Color.Green, textAlign = TextAlign.Left)
-                            }
-                            Column(Modifier.verticalScroll(historyScrollState)) {
-                                items.forEach { item ->
-                                    Column(Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 20.dp, vertical = 10.dp)
-                                        .border(1.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
-                                        .padding(10.dp)
-                                    )
-                                    {
-                                        val createdAt = item["created_at"]
-                                        val dateString = if (createdAt is Timestamp) {
-                                            val date = createdAt.toDate()
-                                            val formatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
-                                            formatter.format(date)
-                                        } else {
-                                            "-"
-                                        }
-                                        val date = null
-                                        Text(
-                                            text = "${dateString ?: "-"}",
-                                            color = Color.LightGray,
-                                            fontSize = 12.sp
-                                        )
-                                        Text(
-                                            text = "Item Id: ${item["item_id"] ?: "-"}",
-                                            color = Color.White,
-                                            fontSize = 14.sp
-                                        )
-                                        Text(
-                                            text = "Item Name: ${item["name"] ?: "-"}",
-                                            color = Color.White,
-                                            fontSize = 14.sp
-                                        )
-                                        Text(
-                                            text = "Stock: ${item["opening_stock"] ?: "-"}",
-                                            color = Color.White,
-                                            fontSize = 14.sp
-                                        )
-                                    }
-                                }
-                            }
-                    }
+                        }}
                 }
             }
 
@@ -427,5 +339,4 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
             }
         }
     }
-}
 }

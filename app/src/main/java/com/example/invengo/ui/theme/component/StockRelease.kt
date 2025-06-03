@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.invengo.R
+import com.example.invengo.ui.theme.GrayB
 import com.example.invengo.ui.theme.Teal
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -113,7 +114,7 @@ fun StockRelease(
                     onValueChange = { },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
+                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused1) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
@@ -153,7 +154,7 @@ fun StockRelease(
                     onValueChange = { textItemName = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
+                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused2) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
@@ -186,7 +187,7 @@ fun StockRelease(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
+                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused3) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
@@ -219,7 +220,7 @@ fun StockRelease(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(130.dp)
-                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
+                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused4) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
