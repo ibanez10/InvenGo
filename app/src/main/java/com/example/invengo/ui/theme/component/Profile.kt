@@ -54,8 +54,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 
-
-
 @Composable
 fun profile(modifier: Modifier = Modifier, navController: NavController, onNextClick: () -> Unit) {
     val scrollState = rememberScrollState()
@@ -66,7 +64,6 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
     val context = LocalContext.current
     val items = remember { mutableStateListOf<Map<String, Any>>() }
     val historyScrollState = rememberScrollState()
-
     // Fetch data from Firestore
     val currentUser = FirebaseAuth.getInstance().currentUser
     val uid = currentUser?.uid
@@ -261,7 +258,6 @@ fun profile(modifier: Modifier = Modifier, navController: NavController, onNextC
                             }
                         }
                     }}
-
                 }
             }
 

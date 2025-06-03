@@ -1,3 +1,5 @@
+import android.app.Activity.RESULT_OK
+import android.provider.ContactsContract.Profile
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -158,8 +160,8 @@ fun OnboardingNavController() {
                     navController.navigate(Screen.StockRelease.route)
                 },
                 onProfileClick = {
-                    navController.navigate(Screen.Profile.route)
-                }
+
+                    navController.navigate(Screen.Profile.route)}
             )
         }
 
@@ -200,7 +202,7 @@ fun OnboardingNavController() {
             )
         }
         composable(Screen.Profile.route) {
-            profile(
+            profile (
                 modifier = Modifier,
                 navController = navController,
                 onNextClick = {
