@@ -277,35 +277,35 @@ fun ItemData(
                                 fontSize = 16.sp
                             )
                         Spacer(modifier.padding(start= 2.dp,top = 11.dp,5.dp))
-                        Button(
-                            onClick = {
-                                val itemId = item["item_id"].toString()
-                                if(uid != null && itemId != null){
-                                    Firebase.firestore.collection("users").document(uid).collection("items")
-                                        .document(itemId).delete()
-                                        .addOnSuccessListener {
-                                            Toast.makeText(
-                                                context,"${itemId} berhasil dihapus",Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                        .addOnFailureListener {
-                                            Toast.makeText(
-                                                context, "Gagal menghapus ${itemId}", Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                }
-                            },
-                            modifier = Modifier
-                                .width(100.dp)
-                                .height(35.dp),
-                            shape = RoundedCornerShape(5.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.Red,
-                                contentColor = Color.White
-                            )
-                        ) {
-                            Text("delete", fontSize = 17.sp, fontWeight = FontWeight.Bold)
-                        }
+                            Button(
+                                onClick = {
+                                    val itemId = item["item_id"].toString()
+                                    if (uid != null && itemId.isNotEmpty()) {
+                                        Firebase.firestore.collection("users").document(uid).collection("items")
+                                            .document(itemId).delete()
+                                            .addOnSuccessListener {
+                                                Toast.makeText(context, "$itemId berhasil dihapus", Toast.LENGTH_SHORT).show()
+
+                                                // ⬅️ Ini dia solusinya:
+                                                items.remove(item)
+                                            }
+                                            .addOnFailureListener {
+                                                Toast.makeText(context, "Gagal menghapus $itemId", Toast.LENGTH_SHORT).show()
+                                            }
+                                    }
+                                },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .height(35.dp),
+                                shape = RoundedCornerShape(5.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.Red,
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Text("delete", fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                            }
+
                         }}
                         Spacer(Modifier.height(30.dp))
                     }
