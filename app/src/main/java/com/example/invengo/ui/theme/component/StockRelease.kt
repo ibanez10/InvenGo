@@ -2,7 +2,6 @@ package com.example.invengo.ui.theme.component
 
 import android.app.DatePickerDialog
 import android.os.Build
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -29,13 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.invengo.R
-import com.example.invengo.ui.theme.GrayB
 import com.example.invengo.ui.theme.Teal
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.firestore
-import com.google.firebase.storage.storage
-import java.security.Timestamp
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,14 +84,12 @@ fun StockRelease(
                 var isFocused4 by remember { mutableStateOf(false) }
 
                 val context = LocalContext.current
-                var calendar = remember { Calendar.getInstance() }
-                var selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
+                val calendar = remember { Calendar.getInstance() }
                 val datePickerDialog = remember {
                     DatePickerDialog(
                         context,
                         { _, year, month, dayOfMonth ->
-                            selectedDate.set(year, month, dayOfMonth)
-                            val formattedDate = String.format("%02d-%02d-%04d", dayOfMonth, month + 1, year)
+                            val formattedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)
                             textItemId = formattedDate
                         },
                         calendar.get(Calendar.YEAR),
@@ -114,7 +105,7 @@ fun StockRelease(
                     onValueChange = { },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
+                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused1) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
@@ -154,7 +145,7 @@ fun StockRelease(
                     onValueChange = { textItemName = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
+                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused2) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
@@ -187,7 +178,7 @@ fun StockRelease(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
+                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused3) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
@@ -220,7 +211,7 @@ fun StockRelease(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(130.dp)
-                        .background(color = GrayB, shape = RoundedCornerShape(10.dp))
+                        .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
                         .border(
                             BorderStroke(1.5.dp, if (isFocused4) Teal else Color.Transparent),
                             shape = RoundedCornerShape(10.dp)
@@ -243,45 +234,9 @@ fun StockRelease(
 
                 Spacer(Modifier.height(30.dp))
                 Button(
-                    onClick = {
-                        val currentUser = FirebaseAuth.getInstance().currentUser
-                        val uid = currentUser?.uid
-                        if (uid != null) {
-                            val db = Firebase.firestore
-                            val storage = Firebase.storage
-                            val itemId = textItemId
-                            val timestamp = com.google.firebase.Timestamp(selectedDate.time)
-                            val itemData = hashMapOf(
-                                "release_at" to textItemId,
-                                "name" to textItemName,
-                                "quantity" to openingStock.toInt(),
-                                "description" to description
-                            )
+                    onClick = { onNextClick(
 
-                            db.collection("users").document(uid).collection("release")
-                                .document(textItemName)
-                                .set(itemData)
-                                .addOnSuccessListener {
-                                    Toast.makeText(
-                                        context,
-                                        "Data berhasil disimpan",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    textItemId = ""
-                                    textItemName = ""
-                                    openingStock= ""
-                                    description= ""
-                                    onNextClick()
-                                }
-                                .addOnFailureListener {
-                                    Toast.makeText(
-                                        context,
-                                        "Gagal menyimpan data",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                        }
-                    },
+                    ) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Teal)
