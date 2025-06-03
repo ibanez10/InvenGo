@@ -15,7 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.invengo.GoogleAuthUIClient
 import com.example.invengo.auth.SignInViewModel
-import com.example.invengo.auth.UserData
 import com.example.invengo.ui.theme.component.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -41,16 +40,17 @@ sealed class Screen(val route: String) {
 fun OnboardingNavController() {
     val navController = rememberAnimatedNavController()
     val context = LocalContext.current
+
     var backPressedTime by remember { mutableStateOf(0L) }
 
     AnimatedNavHost(
         navController = navController,
         startDestination = Screen.OnboardingFirst.route,
         modifier = Modifier.fillMaxSize(),
-        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(350)) },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(350)) },
-        popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(350)) },
-        popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(350)) },
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(300)) },
+        popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(300)) },
+        popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) },
     ) {
         composable(Screen.OnboardingFirst.route) {
             Onboarding_First(
@@ -102,38 +102,24 @@ fun OnboardingNavController() {
                             val signInResult = googleAuthUIClient.signInWithIntent(
                                 intent = result.data ?: return@launch
                             )
-                            viewModel.run {  onSignedInResult(UserData)}
+                            viewModel.onSignedInResult(signInResult)
                         }
                     }
                 }
             )
 
-//            // Auto-login jika user sudah login sebelumnya
-//            LaunchedEffect(Unit) {
-//                val signedInUser = googleAuthUIClient.getSignedInUser()
-//                if (signedInUser != null) {
-//                    navController.navigate(Screen.HomePage.route) {
-//                        popUpTo(Screen.LoginPage.route) { inclusive = true }
-//                        launchSingleTop = true
-//                    }
-//                }
-//            }
-
-            // Saat login sukses
             LaunchedEffect(key1 = state.isSignInSuccessful) {
                 if (state.isSignInSuccessful) {
                     Toast.makeText(context, "Sign in successfull", Toast.LENGTH_LONG).show()
-                    navController.navigate(Screen.HomePage.route) {
-                        popUpTo(Screen.LoginPage.route) { inclusive = true }
-                        launchSingleTop = true
-                    }
                 }
             }
 
             Login_Page(
                 modifier = Modifier,
                 navController = navController,
-                onNextClick = { /* Tidak perlu navigate ulang ke LoginPage */ },
+                onNextClick = {
+                    navController.navigate(Screen.LoginPage.route)
+                },
                 onSignInClick = {
                     lifecycleOwner.lifecycleScope.launch {
                         val signInIntentSender = googleAuthUIClient.signIn()
@@ -186,50 +172,40 @@ fun OnboardingNavController() {
                 }
             )
         }
-
         composable(Screen.AddItem.route) {
             AddItem(
                 modifier = Modifier,
                 navController = navController,
                 onNextClick = {
-                    // Tambahkan aksi jika diperlukan
+
                 }
             )
         }
-
         composable(Screen.InboundStock.route) {
             InbounStock(
                 modifier = Modifier,
                 navController = navController,
                 onNextClick = {
-                    // Tambahkan aksi jika diperlukan
+
                 }
             )
         }
-
         composable(Screen.StockRelease.route) {
             StockRelease(
                 modifier = Modifier,
                 navController = navController,
                 onNextClick = {
-                    // Tambahkan aksi jika diperlukan
+
                 }
             )
         }
-
         composable(Screen.Profile.route) {
             profile(
                 modifier = Modifier,
                 navController = navController,
                 onNextClick = {
-                    // Tambahkan aksi jika diperlukan
-                },
-//                onLogoutClick = {
-//                    navController.navigate(Screen.LoginPage.route) {
-//                        popUpTo(Screen.HomePage.route) { inclusive = true }
-//                        launchSingleTop = true
-//                    }
-//                }
+
+                }
             )
         }
     }
