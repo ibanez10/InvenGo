@@ -1,5 +1,6 @@
 package com.example.invengo.ui.theme.component
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation

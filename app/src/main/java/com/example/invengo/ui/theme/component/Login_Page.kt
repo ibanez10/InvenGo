@@ -15,14 +15,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,11 +44,7 @@ fun Login_Page(
     val activity = context as Activity
     val authViewModel: AuthViewModel = viewModel()
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isFocused1 by remember { mutableStateOf(false) }
-    var isFocused by remember { mutableStateOf(false) }
-    var passwordVisible by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
     var loginError by remember { mutableStateOf("") }
 
     val launcher = rememberLauncherForActivityResult(
@@ -61,67 +54,80 @@ fun Login_Page(
             authViewModel.loginWithGoogleIntent(
                 data = result.data,
                 onSuccess = {
+                    isLoading = false
                     navController.navigate("home_page_first") {
                         popUpTo("login") { inclusive = true }
                     }
                 },
                 onError = {
+                    isLoading = false
                     loginError = it
                     Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                 }
             )
         } else {
+            isLoading = false
             loginError = "Login gagal, silakan coba lagi."
             Toast.makeText(context, "Login gagal", Toast.LENGTH_SHORT).show()
         }
     }
 
+    Box(
+        modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.frame),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
 
-        Box(
-            modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.frame),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+        Box(Modifier.fillMaxWidth().padding(vertical = 15.dp, horizontal = 5.dp)) {
+            Button(
+                onClick = { navController.popBackStack() },
+                colors = ButtonDefaults.textButtonColors(contentColor = Color.Transparent),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.arrow2),
+                    contentDescription = null,
+                    modifier = Modifier.size(25.dp)
+                )
+            }
 
-            Box(Modifier.fillMaxWidth().padding(vertical = 15.dp, horizontal = 5.dp)) {
-                Button(
-                    onClick = { navController.popBackStack() },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Color.Transparent),
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.arrow2),
-                        contentDescription = null,
-                        modifier = Modifier.size(25.dp)
-                    )
-                }
+            Column(Modifier.fillMaxWidth().padding(vertical = 70.dp, horizontal = 25.dp)) {
+                Image(
+                    painter = painterResource(id = R.drawable.logfrm),
+                    contentDescription = null,
+                    modifier = Modifier.size(45.dp)
+                )
+                Spacer(Modifier.height(15.dp))
+                Text("Hi there!", fontSize = 50.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                Text("Welcome back", fontSize = 45.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                Text(
+                    "Enter your credentials to access inventory and operations.",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(Modifier.height(20.dp))
 
-                Column(Modifier.fillMaxWidth().padding(vertical = 70.dp, horizontal = 25.dp)) {
-                    Image(
-                        painter = painterResource(id = R.drawable.logfrm),
-                        contentDescription = null,
-                        modifier = Modifier.size(45.dp)
-                    )
-                    Spacer(Modifier.height(15.dp))
-                    Text("Hi there!", fontSize = 50.sp, color = Color.White, fontWeight = FontWeight.Bold)
-                    Text("Welcome back", fontSize = 50.sp, color = Color.White, fontWeight = FontWeight.Bold)
-                    Text(
-                        "Enter your credentials to access inventory and operations.",
-                        fontSize = 16.sp,
-                        color = Color.Gray
-                    )
-                    Spacer(Modifier.height(20.dp))
-                    Spacer(Modifier.height(15.dp))
+                if (isLoading) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 20.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Color.White)
+                    }
+                } else {
                     Button(
                         onClick = {
+                            isLoading = true
                             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                .requestIdToken("1004455573154-lq9bp2o3hdoqqnrbq9l3qkkuvdnepj7u.apps.googleusercontent.com") // ganti ini
+                                .requestIdToken("1004455573154-lq9bp2o3hdoqqnrbq9l3qkkuvdnepj7u.apps.googleusercontent.com") // ganti client ID sesuai project
                                 .requestEmail()
                                 .build()
 
@@ -147,4 +153,5 @@ fun Login_Page(
                 }
             }
         }
+    }
 }

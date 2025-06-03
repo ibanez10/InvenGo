@@ -59,7 +59,7 @@ fun StockRelease(
     var itemList by remember { mutableStateOf<List<String>>(emptyList()) }
     var expanded by remember { mutableStateOf(false) }
 
-
+    var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (uid != null) {
@@ -286,59 +286,74 @@ fun StockRelease(
                 )
 
                 Spacer(Modifier.height(30.dp))
-                Button(
-                    onClick = {
-                        val stockData = hashMapOf(
-                            "date" to textItemId,
-                            "product_name" to textItemName,
-                            "quantity" to openingStock.toIntOrNull(),
-                            "description" to description
-                        )
+                if (isLoading) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(55.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Teal)
+                    }
+                } else {
+                    Button(
+                        onClick = {
+                            isLoading = true
+                            val stockData = hashMapOf(
+                                "date" to textItemId,
+                                "product_name" to textItemName,
+                                "quantity" to openingStock.toIntOrNull(),
+                                "description" to description
+                            )
 
-                        if (uid != null) {
-                            db.collection("users").document(uid)
-                                .collection("items").whereEqualTo("name", textItemName).get()
-                                .addOnSuccessListener { result ->
-                                    if (!result.isEmpty) {
-                                        val itemDoc = result.documents[0]
-                                        val itemId = itemDoc.id
-                                        val currentStock = itemDoc.getLong("opening_stock") ?: 0
-                                        val addedStock = openingStock.toIntOrNull() ?: 0
-                                        val updatedStock = currentStock - addedStock
+                            if (uid != null) {
+                                db.collection("users").document(uid)
+                                    .collection("items").whereEqualTo("name", textItemName).get()
+                                    .addOnSuccessListener { result ->
+                                        if (!result.isEmpty) {
+                                            val itemDoc = result.documents[0]
+                                            val itemId = itemDoc.id
+                                            val currentStock = itemDoc.getLong("opening_stock") ?: 0
+                                            val addedStock = openingStock.toIntOrNull() ?: 0
+                                            val updatedStock = currentStock - addedStock
 
-                                        // 1. Tambahkan ke inbound_stock
-                                        db.collection("users").document(uid)
-                                            .collection("items").document(itemId)
-                                            .collection("release_stock").add(stockData)
+                                            db.collection("users").document(uid)
+                                                .collection("items").document(itemId)
+                                                .collection("release_stock").add(stockData)
 
-                                        // 2. Update stok di item
-                                        db.collection("users").document(uid)
-                                            .collection("items").document(itemId)
-                                            .update("opening_stock", updatedStock)
-                                            .addOnSuccessListener {
-                                                Toast.makeText(context, "Barang berhasil dikeluarkan", Toast.LENGTH_SHORT).show()
-                                                // Reset semua field
-                                                textItemId = ""
-                                                textItemName = ""
-                                                openingStock = ""
-                                                description = ""
-                                                selectedDate = Calendar.getInstance()
-
-                                                onNextClick()
-                                            }
-                                            .addOnFailureListener {
-                                                Toast.makeText(context, "Gagal mengupdate stok", Toast.LENGTH_SHORT).show()
-                                            }
+                                            db.collection("users").document(uid)
+                                                .collection("items").document(itemId)
+                                                .update("opening_stock", updatedStock)
+                                                .addOnSuccessListener {
+                                                    isLoading = false
+                                                    Toast.makeText(context, "Barang berhasil dikeluarkan", Toast.LENGTH_SHORT).show()
+                                                    textItemId = ""
+                                                    textItemName = ""
+                                                    openingStock = ""
+                                                    description = ""
+                                                    selectedDate = Calendar.getInstance()
+                                                    onNextClick()
+                                                }
+                                                .addOnFailureListener {
+                                                    isLoading = false
+                                                    Toast.makeText(context, "Gagal mengupdate stok", Toast.LENGTH_SHORT).show()
+                                                }
+                                        } else {
+                                            isLoading = false
+                                        }
                                     }
-                                }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Teal)
-                ) {
-                    Spacer(modifier = Modifier.padding(vertical = 20.dp))
-                    Text("Save", fontSize = 20.sp, color = Color.White)
+                            } else {
+                                isLoading = false
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(55.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Teal)
+                    ) {
+                        Text("Save", fontSize = 20.sp, color = Color.White)
+                    }
                 }
             }
         }
