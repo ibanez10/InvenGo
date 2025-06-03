@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,21 +26,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.example.invengo.R
 import com.example.invengo.ui.theme.Teal
+import com.google.firebase.auth.FirebaseAuth
+import coil.compose.rememberAsyncImagePainter
+
 
 @Composable
 fun HomePage(
     modifier: Modifier = Modifier,
     navController: NavController,
-    // <-- user data dari Google login
     onItemDataClick: () -> Unit,
     onInboundStockClick: () -> Unit,
     onStockReleaseClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
     var showSidebar by remember { mutableStateOf(false) }
+    val user = FirebaseAuth.getInstance().currentUser
+    val photoUrl = user?.photoUrl
+    val displayName = user?.displayName ?: "Nama tidak tersedia"
+    val email = user?.email ?: "Email tidak tersedia"
 
     Box(Modifier.fillMaxSize()) {
         // Background image
@@ -48,7 +56,7 @@ fun HomePage(
             modifier = Modifier.fillMaxSize()
         )
 
-        // Sidebar & backdrop
+        // Sidebar & backdrop wrapper with high zIndex
         Box(modifier = Modifier.fillMaxSize().zIndex(20f)) {
             if (showSidebar) {
                 Box(
@@ -61,8 +69,14 @@ fun HomePage(
 
             AnimatedVisibility(
                 visible = showSidebar,
-                enter = slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(200)),
-                exit = slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(200))
+                enter = slideInHorizontally(
+                    initialOffsetX = { -it },
+                    animationSpec = tween(durationMillis = 300)
+                ),
+                exit = slideOutHorizontally(
+                    targetOffsetX = { -it },
+                    animationSpec = tween(durationMillis = 300)
+                )
             ) {
                 Box(
                     modifier = Modifier
@@ -82,55 +96,44 @@ fun HomePage(
                             contentDescription = null,
                             modifier = Modifier.size(40.dp)
                         )
-                        Spacer(Modifier.height(50.dp))
+                        Spacer(Modifier.height(25.dp))
+                        HorizontalDivider(thickness = 1.5.dp, color = Color.Gray)
+                        Spacer(Modifier.height(25.dp))
                         Row(
                             Modifier
                                 .fillMaxWidth()
                                 .background(
-                                    shape = RoundedCornerShape(10.dp),
                                     brush = Brush.horizontalGradient(
                                         colors = listOf(Color.DarkGray, Teal, Color.DarkGray)
-                                    )
+                                    ),
+                                    shape = RoundedCornerShape(10.dp)
                                 )
                                 .padding(10.dp)
+                                .clickable { onProfileClick() }
                         ) {
-                            if (userData?.ProfilePictureUrl != null) {
-                                AsyncImage(
-                                    model = userData.ProfilePictureUrl,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(50.dp)
-                                )
-                            } else {
-                                Image(
-                                    painter = painterResource(R.drawable.avatar),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(50.dp)
-                                )
-                            }
-
+                            Image(
+                                painter = if (photoUrl != null)
+                                    rememberAsyncImagePainter(photoUrl)
+                                else
+                                    painterResource(R.drawable.avatar),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .clip(CircleShape)
+                            )
                             Spacer(modifier = Modifier.width(15.dp))
                             Column {
-                                Text(
-                                    userData?.username ?: "Nama",
-                                    color = Color.White,
-                                    fontSize = 17.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                Text(
-                                    userData?.email ?: "Email@gmail.com",
-                                    color = Color.White,
-                                    fontSize = 12.sp
-                                )
+                                Text(displayName, color = Color.White, fontSize = 17.sp, fontWeight = FontWeight(600))
+                                Text(email, color = Color.White, fontSize = 12.sp)
                             }
                         }
-
                         Spacer(Modifier.height(30.dp))
                         Column(Modifier.padding(horizontal = 10.dp)) {
                             listOf(
                                 R.drawable.dashboard to "Dashboard",
                                 R.drawable.stocklst to "Stock Data",
                                 R.drawable.manage to "Manage Stock",
-                                R.drawable.store to "Manage Store"
+                                R.drawable.store to "Stock History"
                             ).forEach { (icon, title) ->
                                 Row(Modifier.padding(vertical = 10.dp)) {
                                     Image(
@@ -139,12 +142,7 @@ fun HomePage(
                                         modifier = Modifier.size(25.dp)
                                     )
                                     Spacer(Modifier.width(20.dp))
-                                    Text(
-                                        title,
-                                        color = Color.White,
-                                        fontSize = 18.sp,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
+                                    Text(title, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(600))
                                 }
                             }
                         }
@@ -172,41 +170,32 @@ fun HomePage(
                     modifier = Modifier.size(25.dp)
                 )
             }
-
             Text(
-                text = "Hallo, ${userData?.username ?: "User"}!",
-                fontSize = 23.sp,
+                text = "Hello, $displayName",
+                fontSize = 21.sp,
                 textAlign = TextAlign.Center,
                 color = Color.White,
                 modifier = Modifier.weight(1f)
             )
-
             Button(
                 onClick = onProfileClick,
                 colors = ButtonDefaults.textButtonColors(contentColor = Color.Transparent),
                 contentPadding = PaddingValues(1.dp)
-            ) {
-                if (userData?.ProfilePictureUrl != null) {
-                    AsyncImage(
-                        model = userData.ProfilePictureUrl,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(60.dp)
-                            .padding(5.dp)
-                    )
-                } else {
-                    Image(
-                        painter = painterResource(id = R.drawable.avatar),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(60.dp)
-                            .padding(5.dp)
-                    )
-                }
+            ){
+                Image(
+                    painter = if (photoUrl != null)
+                        rememberAsyncImagePainter(photoUrl)
+                    else
+                        painterResource(R.drawable.avatar),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(55.dp)
+                        .clip(CircleShape)
+                )
             }
         }
 
-        // Main content
+        // Main content (Home Section)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -214,7 +203,7 @@ fun HomePage(
                 .zIndex(1f),
             verticalArrangement = Arrangement.Top
         ) {
-            Spacer(Modifier.padding(vertical = 16.dp))
+            Spacer(Modifier.padding(vertical = 10.dp))
 
             listOf(
                 Triple(R.drawable.group, R.drawable.listt, Triple("Item data", "Contains the data items you saved", onItemDataClick)),

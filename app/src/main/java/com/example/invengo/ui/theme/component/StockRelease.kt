@@ -1,12 +1,11 @@
 package com.example.invengo.ui.theme.component
 
-import android.graphics.ImageDecoder
-import android.net.Uri
+import android.app.DatePickerDialog
 import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,12 +17,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -35,6 +30,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.invengo.R
 import com.example.invengo.ui.theme.Teal
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.storage
+import java.security.Timestamp
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +50,7 @@ fun StockRelease(
         contentScale = ContentScale.Crop,
         modifier = Modifier.fillMaxSize()
     )
+
     Box(Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 20.dp)) {
         Column {
             Row(
@@ -74,25 +76,41 @@ fun StockRelease(
                     modifier = Modifier.weight(1f)
                 )
             }
+
             Spacer(Modifier.height(30.dp))
-            Box(
-                modifier = Modifier
-            )
-            Spacer(Modifier.height(15.dp))
+
             Column(Modifier.fillMaxWidth()) {
                 var textItemId by remember { mutableStateOf("") }
                 var textItemName by remember { mutableStateOf("") }
                 var openingStock by remember { mutableStateOf("") }
-                var Description by remember { mutableStateOf("") }
+                var description by remember { mutableStateOf("") }
                 var isFocused1 by remember { mutableStateOf(false) }
                 var isFocused2 by remember { mutableStateOf(false) }
                 var isFocused3 by remember { mutableStateOf(false) }
                 var isFocused4 by remember { mutableStateOf(false) }
+
+                val context = LocalContext.current
+                var calendar = remember { Calendar.getInstance() }
+                var selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
+                val datePickerDialog = remember {
+                    DatePickerDialog(
+                        context,
+                        { _, year, month, dayOfMonth ->
+                            selectedDate.set(year, month, dayOfMonth)
+                            val formattedDate = String.format("%02d-%02d-%04d", dayOfMonth, month + 1, year)
+                            textItemId = formattedDate
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    )
+                }
+
                 Text(text = "Select Date", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
-                Spacer(modifier.padding(5.dp))
+                Spacer(modifier = Modifier.height(5.dp))
                 TextField(
                     value = textItemId,
-                    onValueChange = { textItemId = it },
+                    onValueChange = { },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
@@ -101,34 +119,35 @@ fun StockRelease(
                             shape = RoundedCornerShape(10.dp)
                         )
                         .onFocusChanged { isFocused1 = it.isFocused },
-                    label = { Text("Chose Date", color = Color.Gray) },
+                    label = { Text("Choose Date", color = Color.Gray) },
                     textStyle = LocalTextStyle.current.copy(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     ),
-                    trailingIcon = {
-                        Icon(
-                            painter = painterResource(
-                                id = R.drawable.date
-                            ),
-                            contentDescription = null,
-                            modifier = Modifier.size(25.dp),
-                            tint = Color.Unspecified
-                        )
-                    },
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent
                     ),
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.date),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clickable { datePickerDialog.show() },
+                            tint = Color.Unspecified
+                        )
+                    },
+                    readOnly = true,
                     maxLines = 1
                 )
 
-                Spacer(modifier.height(10.dp))
+                Spacer(Modifier.height(10.dp))
                 Text(text = "Product Name", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
-                Spacer(modifier.padding(5.dp))
+                Spacer(Modifier.height(5.dp))
                 TextField(
                     value = textItemName,
                     onValueChange = { textItemName = it },
@@ -155,15 +174,16 @@ fun StockRelease(
                     maxLines = 1
                 )
 
-                Spacer(modifier.height(10.dp))
+                Spacer(Modifier.height(10.dp))
                 Text(text = "Quantity", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
-                Spacer(modifier.padding(5.dp))
+                Spacer(Modifier.height(5.dp))
                 TextField(
                     value = openingStock,
-                    onValueChange = { // Hanya izinkan angka
+                    onValueChange = {
                         if (it.all { char -> char.isDigit() }) {
                             openingStock = it
-                        }},
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(color = Color.DarkGray, shape = RoundedCornerShape(10.dp))
@@ -172,7 +192,7 @@ fun StockRelease(
                             shape = RoundedCornerShape(10.dp)
                         )
                         .onFocusChanged { isFocused3 = it.isFocused },
-                    label = { Text("Ex.5", color = Color.Gray) },
+                    label = { Text("Ex. 5", color = Color.Gray) },
                     textStyle = LocalTextStyle.current.copy(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -189,12 +209,13 @@ fun StockRelease(
                     ),
                     maxLines = 1
                 )
-                Spacer(modifier.height(10.dp))
+
+                Spacer(Modifier.height(10.dp))
                 Text(text = "Description", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight(500))
-                Spacer(modifier.padding(5.dp))
+                Spacer(Modifier.height(5.dp))
                 TextField(
-                    value = Description,
-                    onValueChange = { Description = it},
+                    value = description,
+                    onValueChange = { description = it },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(130.dp)
@@ -218,17 +239,54 @@ fun StockRelease(
                     ),
                     maxLines = 1
                 )
-                Spacer(Modifier.padding(10.dp))
+
+                Spacer(Modifier.height(30.dp))
                 Button(
                     onClick = {
-                        onNextClick()
+                        val currentUser = FirebaseAuth.getInstance().currentUser
+                        val uid = currentUser?.uid
+                        if (uid != null) {
+                            val db = Firebase.firestore
+                            val storage = Firebase.storage
+                            val itemId = textItemId
+                            val timestamp = com.google.firebase.Timestamp(selectedDate.time)
+                            val itemData = hashMapOf(
+                                "release_at" to textItemId,
+                                "name" to textItemName,
+                                "quantity" to openingStock.toInt(),
+                                "description" to description
+                            )
+
+                            db.collection("users").document(uid).collection("release")
+                                .document(textItemName)
+                                .set(itemData)
+                                .addOnSuccessListener {
+                                    Toast.makeText(
+                                        context,
+                                        "Data berhasil disimpan",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    textItemId = ""
+                                    textItemName = ""
+                                    openingStock= ""
+                                    description= ""
+                                    onNextClick()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(
+                                        context,
+                                        "Gagal menyimpan data",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Teal)
                 ) {
-                    Spacer(Modifier.padding(vertical = 20.dp))
-                    Text("Save", fontSize = 20.sp)
+                    Spacer(modifier = Modifier.padding(vertical = 20.dp))
+                    Text("Save", fontSize = 20.sp, color = Color.White)
                 }
             }
         }
