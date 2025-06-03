@@ -312,7 +312,7 @@ fun InbounStock(
                                             .collection("items").document(itemId)
                                             .update("opening_stock", updatedStock)
                                             .addOnSuccessListener {
-                                                Toast.makeText(context, "Barang berhasil dikeluarkan", Toast.LENGTH_SHORT).show()
+                                                Toast.makeText(context, "Barang berhasil ditambahkan", Toast.LENGTH_SHORT).show()
                                                 // Reset semua field
                                                 textItemId = ""
                                                 textItemName = ""
